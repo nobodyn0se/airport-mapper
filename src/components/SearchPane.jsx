@@ -1,5 +1,5 @@
 import {useAtom} from "jotai";
-import {airportMarkerAtom} from "../state/atoms.jsx";
+import {airportMarkerAtom, currentAirportMarkerAtom, polylinesAtom} from "../state/atoms.jsx";
 import {MdDeleteForever} from "react-icons/md";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import debounce from "lodash.debounce";
@@ -34,6 +34,9 @@ async function getAirportSearch(query) {
 
 function SearchPane() {
     const [, setAirportMarkers] = useAtom(airportMarkerAtom);
+    const [currentAirportMarkers, setCurrentAirportMarkers] = useAtom(currentAirportMarkerAtom);
+    const [polylines, setPolylines] = useAtom(polylinesAtom);
+
     const [searchSuggestions, setSearchSuggestions] = useState([]);
     const [query, setQuery] = useState('');
 
@@ -44,6 +47,8 @@ function SearchPane() {
 
     const handleDeleteAll = () => {
         setAirportMarkers([]);
+        setCurrentAirportMarkers([]);
+        setPolylines([]);
     }
 
     const handleSelectAirport = (selectedAirport) => {
@@ -51,8 +56,28 @@ function SearchPane() {
             if (airportList.some(existingAirport => existingAirport.name === selectedAirport.name)) return airportList;
             return [...airportList, selectedAirport];
         });
+
+        setCurrentAirportMarkers((currentAirports) => {
+            return [...currentAirports, selectedAirport];
+        })
         setQuery('');
         setSearchSuggestions([]);
+    }
+
+    const handlePolylines = () => {
+        if (currentAirportMarkers.length < 2) {
+            console.warn('At least 2 airports needed for a route');
+            return;
+        }
+
+        const newPolyline = {
+            id: `poly-${Date.now()}`,
+            coordinates: currentAirportMarkers.map((airport) => [airport.long, airport.lat]),
+            name: `Route ${Date.now()}`
+        }
+
+        setPolylines(prev => [...prev, newPolyline]);
+        setCurrentAirportMarkers([]);
     }
 
     const debouncedSearch = useMemo(() => {
@@ -76,6 +101,10 @@ function SearchPane() {
             debouncedSearch.cancel();
         };
     }, [debouncedSearch]);
+
+    useEffect(() => {
+        console.log('polylines:', polylines);
+    }, [polylines]);
 
     return (
         <div className="mb-4 relative">
@@ -107,7 +136,8 @@ function SearchPane() {
                     ))}
                 </ul>
             )}
-            <button className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+            <button className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                    onClick={handlePolylines}>
                 Add Route
             </button>
         </div>
