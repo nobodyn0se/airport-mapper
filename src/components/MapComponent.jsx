@@ -2,7 +2,7 @@ import {useCallback, useEffect, useMemo, useRef} from "react";
 import mapboxgl from "mapbox-gl";
 
 import {useAtomValue} from "jotai";
-import {airportMarkerAtom} from "../state/atoms.jsx";
+import {airportMarkerAtom, polylinesAtom} from "../state/atoms.jsx";
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -12,6 +12,7 @@ function MapComponent() {
     const markerRef = useRef();
 
     const airportMarkers = useAtomValue(airportMarkerAtom);
+    const [polylines] = useAtomValue(polylinesAtom)
 
     function getResponsiveZoom() {
 
@@ -79,6 +80,52 @@ function MapComponent() {
             window.removeEventListener('resize', handleResize);
         };
     }, [handleResize]);
+
+    useEffect(() => {
+        console.log('Triggered polyline useEffect')
+        if (!mapRef.current || mapRef.current.isStyleLoaded() || !Array.isArray(polylines)) {
+            return;
+        }
+
+        const addPolylines = () => {
+            const existingLayers = mapRef.current.getStyle().layers.map(layer => layer.id);
+            existingLayers.forEach(layerId => {
+                if (layerId.startsWith('poly-')) {
+                    mapRef.current.removeLayer(layerId);
+                    mapRef.current.removeSource(layerId);
+                }
+            });
+
+            // Add new polylines
+            polylines.forEach(polyline => {
+                mapRef.current.addSource(polyline.id, {
+                    type: 'geojson',
+                    data: {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'LineString',
+                            coordinates: polyline.coordinates,
+                        },
+                    },
+                });
+
+                mapRef.current.addLayer({
+                    id: polyline.id,
+                    type: 'line',
+                    source: polyline.id,
+                    layout: {
+                        'line-join': 'round',
+                        'line-cap': 'round',
+                    },
+                    paint: {
+                        'line-color': '#000',
+                        'line-width': 4,
+                    },
+                });
+            });
+        }
+        addPolylines();
+    }, [polylines])
 
 
     return (
