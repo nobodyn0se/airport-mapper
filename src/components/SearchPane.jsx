@@ -3,6 +3,7 @@ import {airportMarkerAtom} from "../state/atoms.jsx";
 import {MdDeleteForever} from "react-icons/md";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import debounce from "lodash.debounce";
+import SuggestedAirport from "../ui/SuggestedAirport.jsx";
 
 async function getAirportSearch(query) {
     const coordinates = [{
@@ -17,7 +18,9 @@ async function getAirportSearch(query) {
 
     try {
         const response = await fetch(`${import.meta.env.VITE_API_BASEURL}/airports/get/search?${params}`);
-        return response.json();
+        const data = await response.json();
+        console.log(JSON.stringify(data));
+        return data;
     } catch (error) {
         console.log(error);
     }
@@ -99,15 +102,7 @@ function SearchPane() {
                                 handleSelectAirport(item)
                             }}
                         >
-                            <div className="flex justify-between items-center">
-                                <div>
-                                    <span className="font-bold text-base mr-1">{item.icao}</span>
-                                    <span className="text-sm text-gray-500">{item.iata}</span>
-                                </div>
-                                <span
-                                    className="text-sm text-gray-500 truncate max-w-[90px] text-right">{item.municipality}</span>
-                            </div>
-                            <div className="text-xs text-gray-400 mt-1 truncate">{item.name}</div>
+                            <SuggestedAirport item={item}/>
                         </li>
                     ))}
                 </ul>
