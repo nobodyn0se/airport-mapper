@@ -55,7 +55,9 @@ function MapComponent() {
 
         if (airportMarkers.length > 0) {
             airportMarkers.forEach((coordinate) => {
-                const marker = new mapboxgl.Marker()
+                const marker = new mapboxgl.Marker({
+                    color: "#B22222"
+                })
                     .setLngLat([coordinate.long, coordinate.lat])
                     .setPopup(new mapboxgl.Popup({closeButton: false}).setText(coordinate.name)) // Optional: Add popup with city name
                     .addTo(mapRef.current);
