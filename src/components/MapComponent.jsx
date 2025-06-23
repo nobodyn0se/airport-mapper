@@ -31,11 +31,23 @@ function MapComponent() {
                 .addTo(mapRef.current);
         });
 
-        return () => mapRef.current.remove();
+        const handleResize = () => {
+            if (mapRef.current) {
+                mapRef.current.resize();
+            }
+        };
+
+        // Add event listener for window resize
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            mapRef.current.remove();
+            window.removeEventListener('resize', handleResize);
+        };
     }, [coordinates])
 
     return (
-        <div className="h-full w-full bg-gray-200 flex items-center justify-center text-black p-4" id='map-container'
+        <div className="h-full w-full bg-gray-200 flex items-center justify-center text-black" id='map-container'
              ref={mapContainerRef}>
         </div>
     )
