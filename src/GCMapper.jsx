@@ -2,7 +2,7 @@ import './GCMapper.css';
 
 import SearchPane from "./components/SearchPane.jsx";
 import RouteList from "./components/RouteList.jsx";
-import React, {useEffect, useState, Suspense} from "react";
+import React, {useEffect, useState, Suspense, startTransition} from "react";
 import {FaBars} from "react-icons/fa";
 import MapSpinner from "./util/MapSpinner.jsx";
 
@@ -15,6 +15,7 @@ const FakeLazyMap = React.lazy(() => new Promise(resolve => {
 
 function GCMapper() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [loadMap, setLoadMap] = useState(true);
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -29,6 +30,9 @@ function GCMapper() {
     useEffect(() => {
         window.addEventListener('resize', handleResize);
         handleResize();
+
+        startTransition(() => setLoadMap(true));
+
         return () => {
             window.removeEventListener('resize', handleResize);
         };
@@ -51,10 +55,11 @@ function GCMapper() {
                 <RouteList/>
             </div>
             <div className="flex-1">
-                <Suspense fallback={<MapSpinner/>}>
-                    {/*<LazyMap/>*/}
-                    <FakeLazyMap/>
-                </Suspense>
+                {loadMap &&
+                    <Suspense fallback={<MapSpinner/>}>
+                        <LazyMap/>
+                    </Suspense>
+                }
             </div>
         </div>
     );
