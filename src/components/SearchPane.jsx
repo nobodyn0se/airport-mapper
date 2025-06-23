@@ -57,7 +57,7 @@ function SearchPane() {
     }, [debouncedSearch]);
 
     return (
-        <div className="mb-4">
+        <div className="mb-4 relative">
             <div className="flex w-full">
                 <input
                     type="text"
@@ -70,8 +70,19 @@ function SearchPane() {
                     <MdDeleteForever className="text-xl text-red-500" onClick={handleDeleteAll}/>
                 </div>
             </div>
-            <button className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-                    onClick={handleSearch}>
+            {searchSuggestions.length > 0 && (
+                <ul className="absolute left-0 right-0 border bg-gray-242424 border-gray-300 z-10 max-h-48 overflow-y-auto">
+                    {searchSuggestions.map((item) => (
+                        <li
+                            key={item.name}
+                            className="p-2 hover:bg-gray-100 hover:text-black cursor-pointer"
+                        >
+                            {item.name}
+                        </li>
+                    ))}
+                </ul>
+            )}
+            <button className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
                 Add Route
             </button>
         </div>
