@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef} from "react";
+import {useCallback, useEffect, useMemo, useRef} from "react";
 import mapboxgl from "mapbox-gl";
 
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -15,36 +15,55 @@ function MapComponent() {
         lat: 35.416099548339844
     }], [])
 
+    function getResponsiveZoom() {
+
+        const width = window.innerWidth;
+        console.log(width)
+        if (width < 480) return 0.8;
+        if (width < 768) return 1.2;
+        return 2;
+    }
+
+    const initialZoom = useMemo(() => getResponsiveZoom(), []);
+
+    coordinates.forEach((coordinate) => {
+        new mapboxgl.Marker()
+            .setLngLat([coordinate.long, coordinate.lat])
+            .setPopup(new mapboxgl.Popup({closeButton: false}).setText(coordinate.name)) // Optional: Add popup with city name
+            .addTo(mapRef.current);
+    });
+
+    const handleResize = useCallback(() => {
+        if (mapRef.current) {
+            const newZoom = getResponsiveZoom();
+            mapRef.current.easeTo({zoom: newZoom, duration: 500});
+            mapRef.current.resize();
+        }
+    }, []);
+
     useEffect(() => {
 
         mapboxgl.accessToken = import.meta.env.VITE_MAP_ACCESS_TOKEN
         mapRef.current = new mapboxgl.Map({
             container: mapContainerRef.current,
             center: [-74.0242, 40.6941],
-            zoom: 2.0
+            zoom: initialZoom
         })
 
-        coordinates.forEach((coordinate) => {
-            new mapboxgl.Marker()
-                .setLngLat([coordinate.long, coordinate.lat])
-                .setPopup(new mapboxgl.Popup({closeButton: false}).setText(coordinate.name)) // Optional: Add popup with city name
-                .addTo(mapRef.current);
-        });
-
-        const handleResize = () => {
-            if (mapRef.current) {
-                mapRef.current.resize();
-            }
-        };
-
-        // Add event listener for window resize
-        window.addEventListener('resize', handleResize);
 
         return () => {
             mapRef.current.remove();
+        };
+    }, [coordinates, initialZoom])
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+
+        return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, [coordinates])
+    }, [handleResize]);
+
 
     return (
         <div className="h-full w-full bg-gray-200 flex items-center justify-center text-black" id='map-container'
