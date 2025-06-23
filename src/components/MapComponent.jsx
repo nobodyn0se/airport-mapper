@@ -1,37 +1,27 @@
 import {useCallback, useEffect, useMemo, useRef} from "react";
 import mapboxgl from "mapbox-gl";
 
+import {useAtomValue} from "jotai";
+import {airportMarkerAtom} from "../state/atoms.jsx";
+
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 function MapComponent() {
     const mapRef = useRef();
     const mapContainerRef = useRef();
+    const markerRef = useRef();
 
-    const coordinates = useMemo(() => [{
-        name: 'Almaty', long: 77.043, lat: 43.354
-    }, {name: 'Tashkent', long: 69.281, lat: 41.258}, {name: 'Baku', long: 50.047, lat: 40.467}, {
-        name: 'Tehran',
-        long: 51.152198791503906,
-        lat: 35.416099548339844
-    }], [])
+    const airportMarkers = useAtomValue(airportMarkerAtom);
 
     function getResponsiveZoom() {
 
         const width = window.innerWidth;
-        console.log(width)
         if (width < 480) return 0.8;
         if (width < 768) return 1.2;
         return 2;
     }
 
     const initialZoom = useMemo(() => getResponsiveZoom(), []);
-
-    coordinates.forEach((coordinate) => {
-        new mapboxgl.Marker()
-            .setLngLat([coordinate.long, coordinate.lat])
-            .setPopup(new mapboxgl.Popup({closeButton: false}).setText(coordinate.name)) // Optional: Add popup with city name
-            .addTo(mapRef.current);
-    });
 
     const handleResize = useCallback(() => {
         if (mapRef.current) {
@@ -50,11 +40,28 @@ function MapComponent() {
             zoom: initialZoom
         })
 
-
         return () => {
             mapRef.current.remove();
         };
-    }, [coordinates, initialZoom])
+    }, [initialZoom])
+
+    useEffect(() => {
+        if (!mapRef.current) {
+            return
+        }
+
+        markerRef.current?.forEach((marker) => marker.remove())
+        markerRef.current = [];
+
+        airportMarkers.forEach((coordinate) => {
+            const marker = new mapboxgl.Marker()
+                .setLngLat([coordinate.long, coordinate.lat])
+                .setPopup(new mapboxgl.Popup({closeButton: false}).setText(coordinate.name)) // Optional: Add popup with city name
+                .addTo(mapRef.current);
+
+            markerRef.current.push(marker); // track it
+        });
+    }, [airportMarkers])
 
     useEffect(() => {
         window.addEventListener('resize', handleResize);
