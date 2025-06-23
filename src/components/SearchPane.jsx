@@ -4,7 +4,7 @@ import {MdDeleteForever} from "react-icons/md";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import debounce from "lodash.debounce";
 
-async function mockAirportSearch() {
+async function getAirportSearch(query) {
     const coordinates = [{
         name: 'Almaty', long: 77.043, lat: 43.354
     }, {name: 'Tashkent', long: 69.281, lat: 41.258}, {name: 'Baku', long: 50.047, lat: 40.467}, {
@@ -12,6 +12,15 @@ async function mockAirportSearch() {
         long: 51.152198791503906,
         lat: 35.416099548339844
     }]
+
+    const params = new URLSearchParams({searchTerm: query});
+
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASEURL}/airports/get/search?${params}`);
+        return response.json();
+    } catch (error) {
+        console.log(error);
+    }
 
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -25,8 +34,8 @@ function SearchPane() {
     const [searchSuggestions, setSearchSuggestions] = useState([]);
     const [query, setQuery] = useState('');
 
-    const handleSearch = async () => {
-        const suggestions = await mockAirportSearch();
+    const handleSearch = async (searchQuery) => {
+        const suggestions = await getAirportSearch(searchQuery);
         setSearchSuggestions(suggestions);
     }
 
@@ -41,7 +50,7 @@ function SearchPane() {
                 return;
             }
 
-            await handleSearch();
+            await handleSearch(searchQuery);
 
         }, 500);
     }, [])
