@@ -43,6 +43,15 @@ function SearchPane() {
         setAirportMarkers([]);
     }
 
+    const handleSelectAirport = (selectedAirport) => {
+        setAirportMarkers((airportList) => {
+            if (airportList.some(existingAirport => existingAirport.name === selectedAirport.name)) return airportList;
+            return [...airportList, selectedAirport];
+        });
+        setQuery('');
+        setSearchSuggestions([]);
+    }
+
     const debouncedSearch = useMemo(() => {
         return debounce(async (searchQuery) => {
             if (!searchQuery.trim()) {
@@ -86,6 +95,9 @@ function SearchPane() {
                         <li
                             key={item.name}
                             className="p-2 hover:bg-gray-100 hover:text-black cursor-pointer"
+                            onClick={() => {
+                                handleSelectAirport(item)
+                            }}
                         >
                             {item.name}
                         </li>
