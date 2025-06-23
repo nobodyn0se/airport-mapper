@@ -1,6 +1,8 @@
 import {useAtom} from "jotai";
 import {airportMarkerAtom} from "../state/atoms.jsx";
 import {MdDeleteForever} from "react-icons/md";
+import {useCallback, useEffect, useMemo, useState} from "react";
+import debounce from "lodash.debounce";
 
 async function mockAirportSearch() {
     const coordinates = [{
@@ -20,15 +22,39 @@ async function mockAirportSearch() {
 
 function SearchPane() {
     const [, setAirportMarkers] = useAtom(airportMarkerAtom);
+    const [searchSuggestions, setSearchSuggestions] = useState([]);
+    const [query, setQuery] = useState('');
 
     const handleSearch = async () => {
-        const results = await mockAirportSearch();
-        setAirportMarkers(results);
+        const suggestions = await mockAirportSearch();
+        setSearchSuggestions(suggestions);
     }
 
     const handleDeleteAll = () => {
         setAirportMarkers([]);
     }
+
+    const debouncedSearch = useMemo(() => {
+        return debounce(async (searchQuery) => {
+            if (!searchQuery.trim()) {
+                setSearchSuggestions([]);
+                return;
+            }
+
+            await handleSearch();
+
+        }, 500);
+    }, [])
+
+    useEffect(() => {
+        debouncedSearch(query)
+    }, [query, debouncedSearch])
+
+    useEffect(() => {
+        return () => {
+            debouncedSearch.cancel();
+        };
+    }, [debouncedSearch]);
 
     return (
         <div className="mb-4">
@@ -36,6 +62,8 @@ function SearchPane() {
                 <input
                     type="text"
                     placeholder="Enter airport code"
+                    value={query}
+                    onChange={e => setQuery(e.target.value)}
                     className="w-full p-2 border border-gray-300 rounded mb-2"
                 />
                 <div className="mb-2 flex items-center px-3 rounded cursor-pointer">
