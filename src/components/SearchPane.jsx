@@ -67,7 +67,8 @@ function SearchPane() {
                     className="w-full p-2 border border-gray-300 rounded mb-2"
                 />
                 <div className="mb-2 flex items-center px-3 rounded cursor-pointer">
-                    <MdDeleteForever className="text-xl text-red-500" onClick={handleDeleteAll}/>
+                    <MdDeleteForever title="Delete All Routes" className="text-xl text-red-500"
+                                     onClick={handleDeleteAll}/>
                 </div>
             </div>
             {searchSuggestions.length > 0 && (
