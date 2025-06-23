@@ -1,10 +1,17 @@
 import './GCMapper.css';
 
-import MapComponent from "./components/MapComponent.jsx";
 import SearchPane from "./components/SearchPane.jsx";
 import RouteList from "./components/RouteList.jsx";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState, Suspense} from "react";
 import {FaBars} from "react-icons/fa";
+import MapSpinner from "./util/MapSpinner.jsx";
+
+const LazyMap = React.lazy(() => import("./components/MapComponent.jsx"))
+const FakeLazyMap = React.lazy(() => new Promise(resolve => {
+    setTimeout(() => {
+        resolve(import('./components/FakeLazyMap'));
+    }, 5000); // delay import by 5 seconds
+}));
 
 function GCMapper() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -44,7 +51,10 @@ function GCMapper() {
                 <RouteList/>
             </div>
             <div className="flex-1">
-                <MapComponent/>
+                <Suspense fallback={<MapSpinner/>}>
+                    {/*<LazyMap/>*/}
+                    <FakeLazyMap/>
+                </Suspense>
             </div>
         </div>
     );
