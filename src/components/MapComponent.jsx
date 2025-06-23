@@ -61,6 +61,11 @@ function MapComponent() {
 
             markerRef.current.push(marker); // track it
         });
+
+        // move the map to the latest airport marker
+        const lastAirport = airportMarkers[airportMarkers.length - 1];
+        mapRef.current.easeTo({center: [lastAirport.long, lastAirport.lat], duration: 500});
+
     }, [airportMarkers])
 
     useEffect(() => {
