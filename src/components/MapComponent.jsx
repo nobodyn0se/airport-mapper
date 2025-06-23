@@ -53,18 +53,20 @@ function MapComponent() {
         markerRef.current?.forEach((marker) => marker.remove())
         markerRef.current = [];
 
-        airportMarkers.forEach((coordinate) => {
-            const marker = new mapboxgl.Marker()
-                .setLngLat([coordinate.long, coordinate.lat])
-                .setPopup(new mapboxgl.Popup({closeButton: false}).setText(coordinate.name)) // Optional: Add popup with city name
-                .addTo(mapRef.current);
+        if (airportMarkers.length > 0) {
+            airportMarkers.forEach((coordinate) => {
+                const marker = new mapboxgl.Marker()
+                    .setLngLat([coordinate.long, coordinate.lat])
+                    .setPopup(new mapboxgl.Popup({closeButton: false}).setText(coordinate.name)) // Optional: Add popup with city name
+                    .addTo(mapRef.current);
 
-            markerRef.current.push(marker); // track it
-        });
+                markerRef.current.push(marker); // track it
+            });
 
-        // move the map to the latest airport marker
-        const lastAirport = airportMarkers[airportMarkers.length - 1];
-        mapRef.current.easeTo({center: [lastAirport.long, lastAirport.lat], duration: 500});
+            // move the map to the latest airport marker
+            const lastAirport = airportMarkers[airportMarkers.length - 1];
+            mapRef.current.easeTo({center: [lastAirport.long, lastAirport.lat], duration: 500});
+        }
 
     }, [airportMarkers])
 
