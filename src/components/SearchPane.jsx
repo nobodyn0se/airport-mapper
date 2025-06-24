@@ -74,7 +74,13 @@ function SearchPane() {
             name: `Route ${Date.now()}`
         }
 
-        setPolylines(prev => [...prev, newPolyline]);
+        setPolylines(prev => {
+            if (prev.some(existingPolyline => existingPolyline.coordinates === newPolyline.coordinates)) {
+                console.log('Same polyline detected')
+                return prev;
+            }
+            return [...prev, newPolyline]
+        });
         setCurrentAirportMarkers([]);
     }
 
