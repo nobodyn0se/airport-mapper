@@ -118,7 +118,7 @@ function MapComponent() {
                     },
                     paint: {
                         'line-color': '#000',
-                        'line-width': 4,
+                        'line-width': 2,
                     },
                 });
             });
