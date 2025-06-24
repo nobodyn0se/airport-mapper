@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.10",
+    "@turf/turf": "^7.2.0",
     "jotai": "^2.12.5",
     "lodash.debounce": "^4.0.8",
     "mapbox-gl": "^3.13.0",
