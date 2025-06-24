@@ -5,8 +5,13 @@ const generateGreatCircle = (start, end, numPoints = 4) => {
     const endPoint = turf.point(end);      // End coordinates [longitude, latitude]
 
     const greatCircle = turf.greatCircle(startPoint, endPoint, {npoints: numPoints});
+    const gcCoordinates = greatCircle.geometry.coordinates;
 
-    return greatCircle.geometry.coordinates;
+    if (Array.isArray(gcCoordinates[0]) && Array.isArray(gcCoordinates[0][0])) {
+        return gcCoordinates.flat();
+    }
+
+    return gcCoordinates;
 };
 
 const createGCPaths = (currentAirportMarkers) => {
