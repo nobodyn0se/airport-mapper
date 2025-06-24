@@ -87,40 +87,39 @@ function MapComponent() {
         }
 
         const addPolylines = () => {
-            const existingLayers = mapRef.current.getStyle().layers.map(layer => layer.id);
-            existingLayers.forEach(layerId => {
-                if (layerId.startsWith('poly-')) {
-                    mapRef.current.removeLayer(layerId);
-                    mapRef.current.removeSource(layerId);
-                }
-            });
 
             // Add new polylines
             polylines.forEach(polyline => {
-                mapRef.current.addSource(polyline.id, {
-                    type: 'geojson',
-                    data: {
-                        type: 'Feature',
-                        geometry: {
-                            type: 'LineString',
-                            coordinates: polyline.coordinates,
-                        },
-                    },
-                });
+                const layerId = polyline.id;
+                const existingLayer = mapRef.current.getLayer(layerId);
 
-                mapRef.current.addLayer({
-                    id: polyline.id,
-                    type: 'line',
-                    source: polyline.id,
-                    layout: {
-                        'line-join': 'round',
-                        'line-cap': 'round',
-                    },
-                    paint: {
-                        'line-color': '#000',
-                        'line-width': 2,
-                    },
-                });
+                if (!existingLayer) {
+                    mapRef.current.addSource(polyline.id, {
+                        type: 'geojson',
+                        data: {
+                            type: 'Feature',
+                            geometry: {
+                                type: 'LineString',
+                                coordinates: polyline.coordinates,
+                            },
+                        },
+                    })
+
+
+                    mapRef.current.addLayer({
+                        id: polyline.id,
+                        type: 'line',
+                        source: polyline.id,
+                        layout: {
+                            'line-join': 'round',
+                            'line-cap': 'round',
+                        },
+                        paint: {
+                            'line-color': '#000',
+                            'line-width': 2,
+                        },
+                    });
+                }
             });
         }
         addPolylines();
