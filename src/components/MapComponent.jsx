@@ -124,6 +124,21 @@ function MapComponent() {
             });
         }
         addPolylines();
+
+        const clearPolylines = () => {
+            const existingLayers = mapRef.current.getStyle().layers.map(layer => layer.id);
+            existingLayers.forEach(layerId => {
+                if (layerId.startsWith('poly-')) {
+                    mapRef.current.removeLayer(layerId);
+                    mapRef.current.removeSource(layerId);
+                }
+            });
+        }
+
+        if (polylines.length === 0) {
+            clearPolylines();
+        }
+
     }, [polylines])
 
 
