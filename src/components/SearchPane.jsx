@@ -19,7 +19,6 @@ async function getAirportSearch(query) {
     try {
         const response = await fetch(`${import.meta.env.VITE_API_BASEURL}/airports/get/search?${params}`);
         const data = await response.json();
-        console.log(JSON.stringify(data));
         return data;
     } catch (error) {
         console.log(error);
@@ -100,10 +99,6 @@ function SearchPane() {
             debouncedSearch.cancel();
         };
     }, [debouncedSearch]);
-
-    useEffect(() => {
-        console.log('polylines:', polylines);
-    }, [polylines]);
 
     return (
         <div className="mb-4 relative">
