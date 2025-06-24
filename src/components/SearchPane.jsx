@@ -35,7 +35,7 @@ async function getAirportSearch(query) {
 function SearchPane() {
     const [, setAirportMarkers] = useAtom(airportMarkerAtom);
     const [currentAirportMarkers, setCurrentAirportMarkers] = useAtom(currentAirportMarkerAtom);
-    const [polylines, setPolylines] = useAtom(polylinesAtom);
+    const [, setPolylines] = useAtom(polylinesAtom);
 
     const [searchSuggestions, setSearchSuggestions] = useState([]);
     const [query, setQuery] = useState('');
