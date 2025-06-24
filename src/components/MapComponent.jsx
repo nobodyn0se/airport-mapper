@@ -12,7 +12,7 @@ function MapComponent() {
     const markerRef = useRef();
 
     const airportMarkers = useAtomValue(airportMarkerAtom);
-    const [polylines] = useAtomValue(polylinesAtom)
+    const polylines = useAtomValue(polylinesAtom)
 
     function getResponsiveZoom() {
 
