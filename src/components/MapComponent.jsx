@@ -82,8 +82,7 @@ function MapComponent() {
     }, [handleResize]);
 
     useEffect(() => {
-        console.log('Triggered polyline useEffect')
-        if (!mapRef.current || mapRef.current.isStyleLoaded() || !Array.isArray(polylines)) {
+        if (!mapRef.current || !mapRef.current.isStyleLoaded()) {
             return;
         }
 
