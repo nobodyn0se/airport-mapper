@@ -75,8 +75,7 @@ function SearchPane() {
         }
 
         setPolylines(prev => {
-            if (prev.some(existingPolyline => existingPolyline.coordinates === newPolyline.coordinates)) {
-                console.log('Same polyline detected')
+            if (prev.some(existingPolyline => JSON.stringify(existingPolyline.coordinates) === JSON.stringify(newPolyline.coordinates))) {
                 return prev;
             }
             return [...prev, newPolyline]
