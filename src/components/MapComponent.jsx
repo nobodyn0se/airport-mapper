@@ -125,40 +125,44 @@ function MapComponent() {
         };
 
         function loadPolarCircles() {
-            mapInstance.addSource('polar-circles', {
+            mapInstance.addSource('arctic-circle', {
                 type: 'geojson',
                 data: {
                     type: 'FeatureCollection',
                     features: [
                         arcticCircle,
-                        antarcticCircle
+                    ]
+                }
+            });
+
+            mapInstance.addSource('antarctic-circle', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: [
+                        antarcticCircle,
                     ]
                 }
             });
 
             mapInstance.addLayer({
-                id: 'polar-circle-fill',
+                id: 'arctic-circle-fill',
                 type: 'fill',
-                source: 'polar-circles',
+                source: 'arctic-circle',
                 paint: {
-                    'fill-color': '#888',
-                    'fill-opacity': 0.5
+                    'fill-color': '#88d6fe',
+                    'fill-opacity': 1
                 },
             });
 
             mapInstance.addLayer({
-                id: 'polar-circle-labels',
-                type: 'symbol',
-                source: 'polar-circles',
-                layout: {
-                    'text-field': ['get', 'name'],
-                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                    'text-size': 14,
-                    'text-anchor': 'center'
-                },
+                id: 'antarctic-circle-fill',
+                type: 'fill',
+                source: 'antarctic-circle',
                 paint: {
-                    'text-color': '#444' // Move text color here
-                }
+                    'fill-color': '#e7eef2',
+                    'fill-opacity': 1
+                },
             });
 
         }
