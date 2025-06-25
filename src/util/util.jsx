@@ -1,6 +1,6 @@
 import * as turf from '@turf/turf';
 
-const generateGreatCircle = (start, end, numPoints = 4) => {
+const generateGreatCircle = (start, end, numPoints = 10) => {
     const startPoint = turf.point(start);  // Start coordinates [longitude, latitude]
     const endPoint = turf.point(end);      // End coordinates [longitude, latitude]
 
@@ -10,7 +10,6 @@ const generateGreatCircle = (start, end, numPoints = 4) => {
     if (Array.isArray(gcCoordinates[0]) && Array.isArray(gcCoordinates[0][0])) {
         return gcCoordinates.flat();
     }
-
     return gcCoordinates;
 };
 
