@@ -1,15 +1,19 @@
 import {useCallback, useEffect, useMemo, useRef} from "react";
 import mapboxgl from "mapbox-gl";
+import MapboxDraw from '@mapbox/mapbox-gl-draw'; // Mapbox GL Draw plugin
+import * as MapboxDrawGeodesic from 'mapbox-gl-draw-geodesic';
 
 import {useAtomValue} from "jotai";
 import {airportMarkerAtom, polylinesAtom} from "../state/atoms.jsx";
 
 import 'mapbox-gl/dist/mapbox-gl.css';
+import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
 function MapComponent() {
     const mapRef = useRef();
     const mapContainerRef = useRef();
     const markerRef = useRef();
+    const drawRef = useRef();
 
     const airportMarkers = useAtomValue(airportMarkerAtom);
     const polylines = useAtomValue(polylinesAtom)
@@ -32,6 +36,12 @@ function MapComponent() {
         }
     }, []);
 
+    const clearPolylines = (drawInstance) => {
+        if (drawInstance) {
+            drawInstance.deleteAll();
+        }
+    }
+
     useEffect(() => {
 
         mapboxgl.accessToken = import.meta.env.VITE_MAP_ACCESS_TOKEN
@@ -43,8 +53,17 @@ function MapComponent() {
 
         return () => {
             mapRef.current.remove();
+            mapRef.current = null;
         };
     }, [initialZoom])
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [handleResize]);
 
     useEffect(() => {
         if (!mapRef.current) {
@@ -74,72 +93,74 @@ function MapComponent() {
     }, [airportMarkers])
 
     useEffect(() => {
-        window.addEventListener('resize', handleResize);
+        if (!mapRef.current) return;
+
+        const mapInstance = mapRef.current; // Get the current map instance
+
+        const handleMapLoad = () => {
+            let modes = MapboxDraw.modes;
+            modes = MapboxDrawGeodesic.enable(modes);
+
+            drawRef.current = new MapboxDraw({
+                modes: modes,
+                styles: [
+                    {
+                        "id": "gl-draw-line",
+                        "type": "line",
+                        "filter": ["all", ["==", "$type", "LineString"]],
+                        "layout": {
+                            "line-cap": "round",
+                            "line-join": "round"
+                        },
+                        "paint": {
+                            "line-color": "#000",
+                            "line-width": 2
+                        }
+                    }
+                ]
+            });
+
+            mapInstance.addControl(drawRef.current);
+        };
+
+        mapInstance.on('load', handleMapLoad);
 
         return () => {
-            window.removeEventListener('resize', handleResize);
+            if (mapInstance && drawRef.current) {
+                clearPolylines(drawRef.current); // Clear all features managed by Draw
+                mapInstance.removeControl(drawRef.current);
+                drawRef.current = null; // Clear the ref
+                mapInstance.off('load', handleMapLoad); // Remove event listener
+            }
         };
-    }, [handleResize]);
+    }, []);
 
     useEffect(() => {
-        if (!mapRef.current || !mapRef.current.isStyleLoaded()) {
+        if (!mapRef.current || !drawRef.current) {
             return;
         }
 
         const addPolylines = () => {
-
-            // Add new polylines
             polylines.forEach(polyline => {
-                const layerId = polyline.id;
-                const existingLayer = mapRef.current.getLayer(layerId);
-
-                if (!existingLayer) {
-                    mapRef.current.addSource(polyline.id, {
-                        type: 'geojson',
-                        data: {
-                            type: 'Feature',
-                            geometry: {
-                                type: 'LineString',
-                                coordinates: polyline.coordinates,
-                            },
-                        },
-                    })
-
-
-                    mapRef.current.addLayer({
-                        id: polyline.id,
-                        type: 'line',
-                        source: polyline.id,
-                        layout: {
-                            'line-join': 'round',
-                            'line-cap': 'round',
-                        },
-                        paint: {
-                            'line-color': '#000',
-                            'line-width': 2,
-                        },
-                    });
-                }
+                drawRef.current.add({
+                    id: polyline.id,
+                    type: 'Feature',
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: polyline.coordinates,
+                    }
+                })
             });
         }
+
         addPolylines();
 
-        const clearPolylines = () => {
-            const existingLayers = mapRef.current.getStyle().layers.map(layer => layer.id);
-            existingLayers.forEach(layerId => {
-                if (layerId.startsWith('poly-')) {
-                    mapRef.current.removeLayer(layerId);
-                    mapRef.current.removeSource(layerId);
-                }
-            });
+        if (polylines.length === 0) {
+            clearPolylines(drawRef.current);
         }
 
-        if (polylines.length === 0) {
-            clearPolylines();
-        }
 
     }, [polylines])
-
 
     return (
         <div className="h-full w-full bg-gray-200 flex items-center justify-center text-black" id='map-container'
