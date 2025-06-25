@@ -30,4 +30,19 @@ const createGCPaths = (currentAirportMarkers) => {
     }
 }
 
-export {createGCPaths};
+const createPolarCircle = (lat, radiusKm, points = 64) => {
+    const polarCircle = turf.circle([0, lat], radiusKm, {
+        steps: points,
+        units: 'kilometers'
+    });
+
+    console.log(polarCircle);
+    return polarCircle;
+}
+
+const polarRadiusKm = 2623.61;
+
+const arcticCircle = createPolarCircle(66.5, polarRadiusKm);     // Arctic circle
+const antarcticCircle = createPolarCircle(-66.5, polarRadiusKm);      // Antarctic circle
+
+export {createGCPaths, arcticCircle, antarcticCircle};
