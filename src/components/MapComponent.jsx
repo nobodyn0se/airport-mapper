@@ -8,6 +8,7 @@ import {airportMarkerAtom, polylinesAtom} from "../state/atoms.jsx";
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
+import {antarcticCircle, arcticCircle} from "../util/util.jsx";
 
 function MapComponent() {
     const mapRef = useRef();
@@ -123,7 +124,49 @@ function MapComponent() {
             mapInstance.addControl(drawRef.current);
         };
 
-        mapInstance.on('load', handleMapLoad);
+        function loadPolarCircles() {
+            mapInstance.addSource('polar-circles', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: [
+                        arcticCircle,
+                        antarcticCircle
+                    ]
+                }
+            });
+
+            mapInstance.addLayer({
+                id: 'polar-circle-fill',
+                type: 'fill',
+                source: 'polar-circles',
+                paint: {
+                    'fill-color': '#888',
+                    'fill-opacity': 0.5
+                },
+            });
+
+            mapInstance.addLayer({
+                id: 'polar-circle-labels',
+                type: 'symbol',
+                source: 'polar-circles',
+                layout: {
+                    'text-field': ['get', 'name'],
+                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                    'text-size': 14,
+                    'text-anchor': 'center'
+                },
+                paint: {
+                    'text-color': '#444' // Move text color here
+                }
+            });
+
+        }
+
+        mapInstance.on('load', () => {
+            handleMapLoad();
+            loadPolarCircles();
+        });
 
         return () => {
             if (mapInstance && drawRef.current) {
@@ -131,6 +174,7 @@ function MapComponent() {
                 mapInstance.removeControl(drawRef.current);
                 drawRef.current = null; // Clear the ref
                 mapInstance.off('load', handleMapLoad); // Remove event listener
+                mapInstance.off('load', loadPolarCircles);
             }
         };
     }, []);
