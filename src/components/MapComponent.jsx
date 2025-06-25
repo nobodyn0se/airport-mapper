@@ -8,7 +8,7 @@ import {airportMarkerAtom, polylinesAtom} from "../state/atoms.jsx";
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
-import {antarcticCircle, arcticCircle} from "../util/util.jsx";
+import {antarcticCircle, arcticCircle} from "../util/util.js";
 
 function MapComponent() {
     const mapRef = useRef();

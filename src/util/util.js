@@ -16,7 +16,7 @@ const generateGreatCircle = (start, end, numPoints = 10) => {
 const createGCPaths = (currentAirportMarkers) => {
     let allCoordinates = [];
 
-    for (let i = 0; i < currentAirportMarkers.length - 1; i++) {
+    for (let i = 0; i < currentAirportMarkers.length - 1; ++i) {
         const start = [currentAirportMarkers[i].long, currentAirportMarkers[i].lat];
         const end = [currentAirportMarkers[i + 1].long, currentAirportMarkers[i + 1].lat];
 
@@ -25,9 +25,9 @@ const createGCPaths = (currentAirportMarkers) => {
 
         // Append the great circle coordinates to the allCoordinates array
         allCoordinates = allCoordinates.concat(greatCircleCoordinates);
-
-        return allCoordinates;
     }
+
+    return allCoordinates;
 }
 
 const createPolarCircle = (lat, radiusKm, points = 64) => {

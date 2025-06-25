@@ -4,7 +4,7 @@ import {MdDeleteForever} from "react-icons/md";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import debounce from "lodash.debounce";
 import SuggestedAirport from "../ui/SuggestedAirport.jsx";
-import {createGCPaths} from "../util/util.jsx";
+import {createGCPaths} from "../util/util.js";
 
 async function getAirportSearch(query) {
     const coordinates = [{
