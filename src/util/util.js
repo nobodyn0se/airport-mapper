@@ -36,13 +36,12 @@ const createPolarCircle = (lat, radiusKm, points = 64) => {
         units: 'kilometers'
     });
 
-    console.log(polarCircle);
     return polarCircle;
 }
 
-const polarRadiusKm = 2623.61;
+const polarRadiusKm = 1100;
 
-const arcticCircle = createPolarCircle(66.5, polarRadiusKm);     // Arctic circle
-const antarcticCircle = createPolarCircle(-66.5, polarRadiusKm);      // Antarctic circle
+const arcticCircle = createPolarCircle(85, polarRadiusKm);     // Arctic circle
+const antarcticCircle = createPolarCircle(-85, polarRadiusKm);      // Antarctic circle
 
 export {createGCPaths, arcticCircle, antarcticCircle};
