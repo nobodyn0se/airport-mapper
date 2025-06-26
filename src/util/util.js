@@ -30,7 +30,6 @@ const createGCPaths = (currentAirportMarkers) => {
         allCoordinates = allCoordinates.concat(greatCircleCoordinates);
     }
 
-    // console.log('GC Distance', gcDistance);
     return {coordinates: allCoordinates, distance: gcDistance};
 }
 
@@ -51,7 +50,6 @@ function createNewPolylineRoute(currentAirportMarkers) {
     const airportsIATAList = currentAirportMarkers.map(airport => airport.iata);
     const routeName = 'Route ' + airportsIATAList.join('-');
 
-    console.log('In util')
     return {
         id: `poly-${Date.now()}`,
         coordinates: routePath.coordinates,            // use createGCPaths() above
