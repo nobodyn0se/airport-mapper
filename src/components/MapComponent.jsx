@@ -193,16 +193,14 @@ function MapComponent() {
                     type: 'LineString',
                     coordinates: newPolyline.coordinates,
                 }
-            })
+            });
         }
 
-        addPolylines();
-
-        if (polylines.length === 0) {
+        if (polylines.length > 0) {
+            addPolylines();
+        } else {
             clearPolylines(drawRef.current);
         }
-
-
     }, [polylines])
 
     return (
