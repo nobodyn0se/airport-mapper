@@ -72,11 +72,14 @@ function SearchPane() {
         const newPolyline = createNewPolylineRoute(currentAirportMarkers);
 
         setPolylines(prev => {
-            if (prev.some(existingPolyline => JSON.stringify(existingPolyline.coordinates) === JSON.stringify(newPolyline.coordinates))) {
+            // prevent duplicate route addition
+            if (prev.some(existingPolyline => existingPolyline.name === newPolyline.name)) {
+                // display already exists toast
                 return prev;
             }
             return [...prev, newPolyline]
         });
+
         setCurrentAirportMarkers([]);
     }
 
