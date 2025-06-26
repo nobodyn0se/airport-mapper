@@ -155,13 +155,18 @@ function MapComponent() {
             });
 
             mapInstance.addLayer({
-                id: 'antarctic-circle-fill',
-                type: 'fill',
+                id: 'antarctic-circle-line',
+                type: 'line',
                 source: 'antarctic-circle',
                 paint: {
-                    'fill-color': '#e7eef2',
-                    'fill-opacity': 1
+                    'line-color': 'gray',
+                    'line-width': 4,
+                    'line-dasharray': [10, 15],
                 },
+                layout: {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                }
             });
 
             mapInstance.addSource('arctic-circle-center', {
