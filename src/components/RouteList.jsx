@@ -31,7 +31,7 @@ function RouteList() {
                                 {route.distance.map((distance, i) => (
                                     <span
                                         key={i}
-                                        className="font-semibold"
+                                        className="font-semibold text-right"
                                     >
                                     {distance.toFixed(2)}
                                     </span>
