@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useRef} from "react";
+import {useEffect, useRef} from "react";
 import mapboxgl from "mapbox-gl";
 import MapboxDraw from '@mapbox/mapbox-gl-draw'; // Mapbox GL Draw plugin
 import * as MapboxDrawGeodesic from 'mapbox-gl-draw-geodesic';
@@ -41,8 +41,7 @@ function MapComponent() {
             container: mapContainerRef.current,
             center: [-74.0242, 40.6941],
             zoom: initialZoom
-        })
-        console.log('Map created')
+        });
 
         const handleResize = () => {
             if (mapRef.current) {
