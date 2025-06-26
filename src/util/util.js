@@ -42,7 +42,7 @@ const createPolarCircle = (lat, radiusKm, points = 64) => {
 
 const polarRadiusKm = 1100;
 
-const arcticCircle = createPolarCircle(85, polarRadiusKm);     // Arctic circle
+const arcticCircle = createPolarCircle(89.9, polarRadiusKm);     // Arctic circle
 const antarcticCircle = createPolarCircle(-85, polarRadiusKm);      // Antarctic circle
 
 function createNewPolylineRoute(currentAirportMarkers) {
