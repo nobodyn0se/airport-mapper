@@ -15,10 +15,13 @@ const generateGreatCircle = (start, end, numPoints = 10) => {
 
 const createGCPaths = (currentAirportMarkers) => {
     let allCoordinates = [];
+    let gcDistance = [];
 
     for (let i = 0; i < currentAirportMarkers.length - 1; ++i) {
         const start = [currentAirportMarkers[i].long, currentAirportMarkers[i].lat];
         const end = [currentAirportMarkers[i + 1].long, currentAirportMarkers[i + 1].lat];
+
+        gcDistance.push(turf.distance(turf.point(start), turf.point(end)));
 
         // Generate the great circle path between consecutive markers
         const greatCircleCoordinates = generateGreatCircle(start, end);
@@ -27,7 +30,8 @@ const createGCPaths = (currentAirportMarkers) => {
         allCoordinates = allCoordinates.concat(greatCircleCoordinates);
     }
 
-    return allCoordinates;
+    // console.log('GC Distance', gcDistance);
+    return {coordinates: allCoordinates, distance: gcDistance};
 }
 
 const createPolarCircle = (lat, radiusKm, points = 64) => {
@@ -44,4 +48,19 @@ const polarRadiusKm = 1100;
 const arcticCircle = createPolarCircle(85, polarRadiusKm);     // Arctic circle
 const antarcticCircle = createPolarCircle(-85, polarRadiusKm);      // Antarctic circle
 
-export {createGCPaths, arcticCircle, antarcticCircle};
+function createNewPolylineRoute(currentAirportMarkers) {
+    const routePath = createGCPaths(currentAirportMarkers);
+    const airportsIATAList = currentAirportMarkers.map(airport => airport.iata);
+    const routeName = 'Route ' + airportsIATAList.join('-');
+
+    console.log('In util')
+    return {
+        id: `poly-${Date.now()}`,
+        coordinates: routePath.coordinates,            // use createGCPaths() above
+        distance: routePath.distance,
+        name: routeName,
+        airports: airportsIATAList
+    };
+}
+
+export {createGCPaths, arcticCircle, antarcticCircle, createNewPolylineRoute};

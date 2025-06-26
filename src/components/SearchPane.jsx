@@ -4,7 +4,7 @@ import {MdDeleteForever} from "react-icons/md";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import debounce from "lodash.debounce";
 import SuggestedAirport from "../ui/SuggestedAirport.jsx";
-import {createGCPaths} from "../util/util.js";
+import {createNewPolylineRoute} from "../util/util.js";
 
 async function getAirportSearch(query) {
     const coordinates = [{
@@ -69,11 +69,7 @@ function SearchPane() {
             return;
         }
 
-        const newPolyline = {
-            id: `poly-${Date.now()}`,
-            coordinates: createGCPaths(currentAirportMarkers),            // use createGCPaths() above
-            name: `Route ${Date.now()}`
-        }
+        const newPolyline = createNewPolylineRoute(currentAirportMarkers);
 
         setPolylines(prev => {
             if (prev.some(existingPolyline => JSON.stringify(existingPolyline.coordinates) === JSON.stringify(newPolyline.coordinates))) {
