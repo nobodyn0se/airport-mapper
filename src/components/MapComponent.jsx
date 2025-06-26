@@ -27,8 +27,6 @@ function MapComponent() {
         return 2;
     }
 
-    const initialZoom = useMemo(() => getResponsiveZoom(), []);
-
     const handleResize = useCallback(() => {
         if (mapRef.current) {
             const newZoom = getResponsiveZoom();
@@ -44,6 +42,7 @@ function MapComponent() {
     }
 
     useEffect(() => {
+        const initialZoom = getResponsiveZoom();
 
         mapboxgl.accessToken = import.meta.env.VITE_MAP_ACCESS_TOKEN
         mapRef.current = new mapboxgl.Map({
@@ -51,12 +50,13 @@ function MapComponent() {
             center: [-74.0242, 40.6941],
             zoom: initialZoom
         })
+        // console.log('Map created')
 
         return () => {
             mapRef.current.remove();
             mapRef.current = null;
         };
-    }, [initialZoom])
+    }, [])
 
     useEffect(() => {
         window.addEventListener('resize', handleResize);
