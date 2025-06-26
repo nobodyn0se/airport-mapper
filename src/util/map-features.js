@@ -50,4 +50,66 @@ const layerAntarcticCircle = {
     }
 };
 
-export {sourceArcticCircle, sourceAntarcticCircle, layerArcticCircle, layerAntarcticCircle};
+const sourceArcticCenter = {
+    type: 'geojson',
+    data: {
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [0, 90]
+        }
+    }
+};
+const layerArcticLabel = {
+    id: 'arctic-circle-label',
+    type: 'symbol',
+    source: 'arctic-circle-center',
+    layout: {
+        'text-field': 'North Pole Exclusion Zone',
+        'text-size': 12,
+        'text-allow-overlap': true,
+        'text-ignore-placement': true
+    },
+    paint: {
+        'text-color': 'black',
+        'text-halo-color': 'white',
+        'text-halo-width': 2
+    }
+};
+const sourceAntarcticCenter = {
+    type: 'geojson',
+    data: {
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [0, -85]
+        }
+    }
+};
+const layerAntarcticLabel = {
+    id: 'antarctic-circle-label',
+    type: 'symbol',
+    source: 'antarctic-circle-center',
+    layout: {
+        'text-field': 'South Pole Exclusion Zone',
+        'text-size': 12,
+        'text-allow-overlap': true,
+        'text-ignore-placement': true
+    },
+    paint: {
+        'text-color': 'black',
+        'text-halo-color': 'white',
+        'text-halo-width': 2
+    }
+};
+
+export {
+    sourceArcticCircle,
+    sourceAntarcticCircle,
+    layerArcticCircle,
+    layerAntarcticCircle,
+    sourceArcticCenter,
+    layerArcticLabel,
+    sourceAntarcticCenter,
+    layerAntarcticLabel
+};

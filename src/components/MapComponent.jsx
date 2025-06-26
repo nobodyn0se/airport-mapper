@@ -9,9 +9,9 @@ import {airportMarkerAtom, polylinesAtom} from "../state/atoms.jsx";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import {
-    layerAntarcticCircle,
-    layerArcticCircle,
-    sourceAntarcticCircle,
+    layerAntarcticCircle, layerAntarcticLabel,
+    layerArcticCircle, layerArcticLabel, sourceAntarcticCenter,
+    sourceAntarcticCircle, sourceArcticCenter,
     sourceArcticCircle
 } from "../util/map-features.js";
 
@@ -130,61 +130,11 @@ function MapComponent() {
             mapInstance.addLayer(layerArcticCircle);
             mapInstance.addLayer(layerAntarcticCircle);
 
-            mapInstance.addSource('arctic-circle-center', {
-                type: 'geojson',
-                data: {
-                    type: 'Feature',
-                    geometry: {
-                        type: 'Point',
-                        coordinates: [0, 90]
-                    }
-                }
-            });
+            mapInstance.addSource('arctic-circle-center', sourceArcticCenter);
+            mapInstance.addLayer(layerArcticLabel);
 
-            mapInstance.addLayer({
-                id: 'arctic-circle-label',
-                type: 'symbol',
-                source: 'arctic-circle-center',
-                layout: {
-                    'text-field': 'North Pole Exclusion Zone',
-                    'text-size': 12,
-                    'text-allow-overlap': true,
-                    'text-ignore-placement': true
-                },
-                paint: {
-                    'text-color': 'black',
-                    'text-halo-color': 'white',
-                    'text-halo-width': 2
-                }
-            });
-
-            mapInstance.addSource('antarctic-circle-center', {
-                type: 'geojson',
-                data: {
-                    type: 'Feature',
-                    geometry: {
-                        type: 'Point',
-                        coordinates: [0, -85]
-                    }
-                }
-            });
-
-            mapInstance.addLayer({
-                id: 'antarctic-circle-label',
-                type: 'symbol',
-                source: 'antarctic-circle-center',
-                layout: {
-                    'text-field': 'South Pole Exclusion Zone',
-                    'text-size': 12,
-                    'text-allow-overlap': true,
-                    'text-ignore-placement': true
-                },
-                paint: {
-                    'text-color': 'black',
-                    'text-halo-color': 'white',
-                    'text-halo-width': 2
-                }
-            });
+            mapInstance.addSource('antarctic-circle-center', sourceAntarcticCenter);
+            mapInstance.addLayer(layerAntarcticLabel);
         }
 
         mapInstance.on('load', () => {
