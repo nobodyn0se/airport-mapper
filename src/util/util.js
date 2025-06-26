@@ -35,12 +35,10 @@ const createGCPaths = (currentAirportMarkers) => {
 }
 
 const createPolarCircle = (lat, radiusKm, points = 64) => {
-    const polarCircle = turf.circle([0, lat], radiusKm, {
+    return turf.circle([0, lat], radiusKm, {
         steps: points,
         units: 'kilometers'
     });
-
-    return polarCircle;
 }
 
 const polarRadiusKm = 1100;
