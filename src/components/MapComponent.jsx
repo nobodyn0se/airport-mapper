@@ -8,7 +8,7 @@ import {airportMarkerAtom, polylinesAtom} from "../state/atoms.jsx";
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
-import {antarcticCircle, arcticCircle} from "../util/util.js";
+import {sourceAntarcticCircle, sourceArcticCircle} from "../util/map-features.js";
 
 function MapComponent() {
     const mapRef = useRef();
@@ -119,25 +119,8 @@ function MapComponent() {
         };
 
         function loadPolarCircles() {
-            mapInstance.addSource('arctic-circle', {
-                type: 'geojson',
-                data: {
-                    type: 'FeatureCollection',
-                    features: [
-                        arcticCircle,
-                    ]
-                }
-            });
-
-            mapInstance.addSource('antarctic-circle', {
-                type: 'geojson',
-                data: {
-                    type: 'FeatureCollection',
-                    features: [
-                        antarcticCircle,
-                    ]
-                }
-            });
+            mapInstance.addSource('arctic-circle', sourceArcticCircle);
+            mapInstance.addSource('antarctic-circle', sourceAntarcticCircle);
 
             mapInstance.addLayer({
                 id: 'arctic-circle-line',
