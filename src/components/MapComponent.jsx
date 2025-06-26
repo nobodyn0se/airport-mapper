@@ -8,7 +8,12 @@ import {airportMarkerAtom, polylinesAtom} from "../state/atoms.jsx";
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
-import {sourceAntarcticCircle, sourceArcticCircle} from "../util/map-features.js";
+import {
+    layerAntarcticCircle,
+    layerArcticCircle,
+    sourceAntarcticCircle,
+    sourceArcticCircle
+} from "../util/map-features.js";
 
 function MapComponent() {
     const mapRef = useRef();
@@ -122,35 +127,8 @@ function MapComponent() {
             mapInstance.addSource('arctic-circle', sourceArcticCircle);
             mapInstance.addSource('antarctic-circle', sourceAntarcticCircle);
 
-            mapInstance.addLayer({
-                id: 'arctic-circle-line',
-                type: 'line',
-                source: 'arctic-circle',
-                paint: {
-                    'line-color': 'gray',
-                    'line-width': 4,
-                    'line-dasharray': [10, 15],
-                },
-                layout: {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                }
-            });
-
-            mapInstance.addLayer({
-                id: 'antarctic-circle-line',
-                type: 'line',
-                source: 'antarctic-circle',
-                paint: {
-                    'line-color': 'gray',
-                    'line-width': 4,
-                    'line-dasharray': [10, 15],
-                },
-                layout: {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                }
-            });
+            mapInstance.addLayer(layerArcticCircle);
+            mapInstance.addLayer(layerAntarcticCircle);
 
             mapInstance.addSource('arctic-circle-center', {
                 type: 'geojson',

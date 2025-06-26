@@ -20,4 +20,34 @@ const sourceAntarcticCircle = {
     }
 };
 
-export {sourceArcticCircle, sourceAntarcticCircle}
+const layerArcticCircle = {
+    id: 'arctic-circle-line',
+    type: 'line',
+    source: 'arctic-circle',
+    paint: {
+        'line-color': 'gray',
+        'line-width': 4,
+        'line-dasharray': [10, 15],
+    },
+    layout: {
+        'line-join': 'round',
+        'line-cap': 'round'
+    }
+};
+
+const layerAntarcticCircle = {
+    id: 'antarctic-circle-line',
+    type: 'line',
+    source: 'antarctic-circle',
+    paint: {
+        'line-color': 'gray',
+        'line-width': 4,
+        'line-dasharray': [10, 15],
+    },
+    layout: {
+        'line-join': 'round',
+        'line-cap': 'round'
+    }
+};
+
+export {sourceArcticCircle, sourceAntarcticCircle, layerArcticCircle, layerAntarcticCircle};
