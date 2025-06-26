@@ -164,6 +164,34 @@ function MapComponent() {
                 },
             });
 
+            mapInstance.addSource('arctic-circle-center', {
+                type: 'geojson',
+                data: {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [0, 90]
+                    }
+                }
+            });
+
+            mapInstance.addLayer({
+                id: 'arctic-circle-label',
+                type: 'symbol',
+                source: 'arctic-circle-center',
+                layout: {
+                    'text-field': 'North Pole Exclusion Zone',
+                    'text-size': 12,
+                    'text-allow-overlap': true,
+                    'text-ignore-placement': true
+                },
+                paint: {
+                    'text-color': 'black',
+                    'text-halo-color': 'white',
+                    'text-halo-width': 2
+                }
+            });
+
         }
 
         mapInstance.on('load', () => {
