@@ -197,6 +197,33 @@ function MapComponent() {
                 }
             });
 
+            mapInstance.addSource('antarctic-circle-center', {
+                type: 'geojson',
+                data: {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [0, -85]
+                    }
+                }
+            });
+
+            mapInstance.addLayer({
+                id: 'antarctic-circle-label',
+                type: 'symbol',
+                source: 'antarctic-circle-center',
+                layout: {
+                    'text-field': 'South Pole Exclusion Zone',
+                    'text-size': 12,
+                    'text-allow-overlap': true,
+                    'text-ignore-placement': true
+                },
+                paint: {
+                    'text-color': 'black',
+                    'text-halo-color': 'white',
+                    'text-halo-width': 2
+                }
+            });
         }
 
         mapInstance.on('load', () => {
