@@ -27,14 +27,6 @@ function MapComponent() {
         return 2;
     }
 
-    const handleResize = useCallback(() => {
-        if (mapRef.current) {
-            const newZoom = getResponsiveZoom();
-            mapRef.current.easeTo({zoom: newZoom, duration: 500});
-            mapRef.current.resize();
-        }
-    }, []);
-
     const clearPolylines = (drawInstance) => {
         if (drawInstance) {
             drawInstance.deleteAll();
@@ -50,21 +42,24 @@ function MapComponent() {
             center: [-74.0242, 40.6941],
             zoom: initialZoom
         })
-        // console.log('Map created')
+        console.log('Map created')
+
+        const handleResize = () => {
+            if (mapRef.current) {
+                const newZoom = getResponsiveZoom();
+                mapRef.current.easeTo({zoom: newZoom, duration: 500});
+                mapRef.current.resize();
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
 
         return () => {
             mapRef.current.remove();
             mapRef.current = null;
-        };
-    }, [])
-
-    useEffect(() => {
-        window.addEventListener('resize', handleResize);
-
-        return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, [handleResize]);
+    }, [])
 
     useEffect(() => {
         if (!mapRef.current) {
