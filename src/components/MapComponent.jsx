@@ -140,13 +140,18 @@ function MapComponent() {
             });
 
             mapInstance.addLayer({
-                id: 'arctic-circle-fill',
-                type: 'fill',
+                id: 'arctic-circle-line',
+                type: 'line',
                 source: 'arctic-circle',
                 paint: {
-                    'fill-color': '#88d6fe',
-                    'fill-opacity': 1
+                    'line-color': 'gray',
+                    'line-width': 4,
+                    'line-dasharray': [10, 15],
                 },
+                layout: {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                }
             });
 
             mapInstance.addLayer({
