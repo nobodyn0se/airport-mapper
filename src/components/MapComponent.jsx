@@ -184,20 +184,16 @@ function MapComponent() {
         }
 
         const addPolylines = () => {
-            polylines.forEach(polyline => {
-                const routeAlreadyExists = drawRef.current.get(polyline.name);
+            const newPolyline = polylines[polylines.length - 1];
 
-                if (!routeAlreadyExists) {
-                    drawRef.current.add({
-                        id: polyline.name,
-                        type: 'Feature',
-                        geometry: {
-                            type: 'LineString',
-                            coordinates: polyline.coordinates,
-                        }
-                    })
+            drawRef.current.add({
+                id: newPolyline.name,
+                type: 'Feature',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: newPolyline.coordinates,
                 }
-            });
+            })
         }
 
         addPolylines();
