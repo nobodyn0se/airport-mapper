@@ -57,7 +57,12 @@ function SearchPane() {
             return [...airportList, selectedAirport];
         });
 
-        setCurrentAirportMarkers((currentAirports) => [...currentAirports, selectedAirport]);
+        setCurrentAirportMarkers((currentAirports) => {
+            if (currentAirports.length > 0 && currentAirports[currentAirports.length - 1].name === selectedAirport.name) {
+                return currentAirports;
+            }
+            return [...currentAirports, selectedAirport];
+        });
 
         setQuery('');
         setSearchSuggestions([]);
