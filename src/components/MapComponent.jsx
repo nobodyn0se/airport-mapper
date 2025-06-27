@@ -18,7 +18,7 @@ import {
 function MapComponent() {
     const mapRef = useRef();
     const mapContainerRef = useRef();
-    const markerRef = useRef();
+    const markerRef = useRef([]);
     const drawRef = useRef();
 
     const airportMarkers = useAtomValue(airportMarkerAtom);
@@ -70,26 +70,34 @@ function MapComponent() {
             return
         }
 
-        markerRef.current?.forEach((marker) => marker.remove())
-        markerRef.current = [];
-
-        if (airportMarkers.length > 0) {
-            airportMarkers.forEach((coordinate) => {
-                const marker = new mapboxgl.Marker({
-                    color: "#B22222"
-                })
-                    .setLngLat([coordinate.long, coordinate.lat])
-                    .setPopup(new mapboxgl.Popup({closeButton: false}).setText(coordinate.name)) // Optional: Add popup with city name
-                    .addTo(mapRef.current);
-
-                markerRef.current.push(marker); // track it
-            });
-
-            // move the map to the latest airport marker
-            const lastAirport = airportMarkers[airportMarkers.length - 1];
-            mapRef.current.easeTo({center: [lastAirport.long, lastAirport.lat], duration: 500});
+        const removeAllMarkers = () => {
+            markerRef.current?.forEach((marker) => marker.remove())
+            markerRef.current = [];
         }
 
+        if (airportMarkers.length === 0) {
+            removeAllMarkers();
+            return;
+        }
+
+        const unmarkedAirport = airportMarkers[airportMarkers.length - 1];
+
+        const marker = new mapboxgl.Marker({
+            color: "#B22222"
+        })
+            .setLngLat([unmarkedAirport.long, unmarkedAirport.lat])
+            .setPopup(new mapboxgl.Popup({closeButton: false}).setText(unmarkedAirport.name)) // Optional: Add popup with city name
+            .addTo(mapRef.current);
+
+        // Added iata ident to each marker
+        marker.iata = unmarkedAirport.iata;
+        markerRef.current.push(marker); // track it
+
+        // move the map to the latest airport marker
+        const lastAirport = airportMarkers[airportMarkers.length - 1];
+        mapRef.current.easeTo({center: [lastAirport.long, lastAirport.lat], duration: 500});
+
+        // Cleanup function interferes with the marker list persistence, hence disabled
     }, [airportMarkers])
 
     useEffect(() => {
