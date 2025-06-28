@@ -59,4 +59,32 @@ function createNewPolylineRoute(currentAirportMarkers) {
     };
 }
 
-export {createGCPaths, arcticCircle, antarcticCircle, createNewPolylineRoute};
+function doesRoutePassPoles(routeLineString, polarCircle) {
+    // routeLineString must be turf.lineString(geometry.coordinates)
+    return turf.booleanIntersects(routeLineString, polarCircle);
+}
+
+function filterRouteInsidePole(routeLineString, polarCircle) {
+    turf.lineSlice(turf.point(polarCircle.geometry.coordinates[0]), routeLineString, polarCircle);
+}
+
+function filterRouteLine(routeLine) {
+    const lineString = turf.lineString(routeLine.geometry.coordinates);
+    const intersectsArctic = doesRoutePassPoles(lineString, arcticCircle);
+    const intersectsAntarctic = doesRoutePassPoles(lineString, antarcticCircle);
+
+    if (intersectsArctic) {
+        console.log('Line intersects Arctic Circle');
+        return filterRouteInsidePole(lineString, arcticCircle);
+    }
+
+    if (intersectsAntarctic) {
+        console.log('Line intersects Antarctic Circle');
+        return filterRouteInsidePole(lineString, antarcticCircle);
+    }
+
+    console.log('Line does not intersect any circle');
+    return routeLine;
+}
+
+export {createGCPaths, arcticCircle, antarcticCircle, createNewPolylineRoute, filterRouteLine};
