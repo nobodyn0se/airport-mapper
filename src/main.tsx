@@ -1,10 +1,16 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import {StrictMode} from 'react'
+import {createRoot} from 'react-dom/client'
 import './index.css'
 import GCMapper from './GCMapper.jsx'
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <GCMapper />
-  </StrictMode>,
+const rootElement = document.getElementById('root');
+
+if (!rootElement) {
+    throw new Error('Root element is not defined');
+}
+
+createRoot(rootElement).render(
+    <StrictMode>
+        <GCMapper/>
+    </StrictMode>,
 )
