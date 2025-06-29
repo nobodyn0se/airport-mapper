@@ -14,12 +14,13 @@ import {
     sourceAntarcticCircle, sourceArcticCenter,
     sourceArcticCircle
 } from "@util/map-features.js";
+import {AirportMarker} from "../types/global.types.ts";
 
 function MapComponent() {
-    const mapRef = useRef();
-    const mapContainerRef = useRef();
-    const markerRef = useRef([]);
-    const drawRef = useRef();
+    const mapRef = useRef<mapboxgl.Map | null>(null);
+    const mapContainerRef = useRef<HTMLDivElement | null>(null);
+    const markerRef = useRef<AirportMarker[]>([]);
+    const drawRef = useRef<MapboxDraw | null>(null);
 
     const airportMarkers = useAtomValue(airportMarkerAtom);
     const polylines = useAtomValue(polylinesAtom)
@@ -32,7 +33,7 @@ function MapComponent() {
         return 2;
     }
 
-    const clearPolylines = (drawInstance) => {
+    const clearPolylines = (drawInstance: MapboxDraw | null) => {
         if (drawInstance) {
             drawInstance.deleteAll();
         }
@@ -42,11 +43,13 @@ function MapComponent() {
         const initialZoom = getResponsiveZoom();
 
         mapboxgl.accessToken = import.meta.env.VITE_MAP_ACCESS_TOKEN
-        mapRef.current = new mapboxgl.Map({
-            container: mapContainerRef.current,
-            center: [-74.0242, 40.6941],
-            zoom: initialZoom
-        });
+        if (mapContainerRef.current) {
+            mapRef.current = new mapboxgl.Map({
+                container: mapContainerRef.current,
+                center: [-74.0242, 40.6941],
+                zoom: initialZoom
+            });
+        }
 
         const handleResize = () => {
             if (mapRef.current) {
@@ -59,7 +62,7 @@ function MapComponent() {
         window.addEventListener('resize', handleResize);
 
         return () => {
-            mapRef.current.remove();
+            mapRef.current?.remove();
             mapRef.current = null;
             window.removeEventListener('resize', handleResize);
         };
@@ -82,7 +85,7 @@ function MapComponent() {
 
         const unmarkedAirport = airportMarkers[airportMarkers.length - 1];
 
-        const marker = new mapboxgl.Marker({
+        const marker: AirportMarker = new mapboxgl.Marker({
             color: "#B22222"
         })
             .setLngLat([unmarkedAirport.long, unmarkedAirport.lat])
@@ -110,6 +113,8 @@ function MapComponent() {
             modes = MapboxDrawGeodesic.enable(modes);
 
             drawRef.current = new MapboxDraw({
+                // ignore ts assertions until a proper declaration is available
+                // @ts-ignore
                 modes: modes,
                 styles: [
                     {
@@ -169,13 +174,14 @@ function MapComponent() {
         const addPolylines = () => {
             const newPolyline = polylines[polylines.length - 1];
 
-            drawRef.current.add({
+            drawRef.current?.add({
                 id: newPolyline.name,
                 type: 'Feature',
                 geometry: {
                     type: 'LineString',
                     coordinates: newPolyline.coordinates,
-                }
+                },
+                properties: {}
             });
         }
 

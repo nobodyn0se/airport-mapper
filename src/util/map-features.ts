@@ -1,6 +1,7 @@
 import {antarcticCircle, arcticCircle} from "@util/util.ts";
+import {GeoJSONSourceSpecification, LineLayerSpecification, SymbolLayerSpecification} from "mapbox-gl";
 
-const sourceArcticCircle = {
+const sourceArcticCircle: GeoJSONSourceSpecification = {
     type: 'geojson',
     data: {
         type: 'FeatureCollection',
@@ -10,7 +11,7 @@ const sourceArcticCircle = {
     }
 };
 
-const sourceAntarcticCircle = {
+const sourceAntarcticCircle: GeoJSONSourceSpecification = {
     type: 'geojson',
     data: {
         type: 'FeatureCollection',
@@ -20,7 +21,7 @@ const sourceAntarcticCircle = {
     }
 };
 
-const layerArcticCircle = {
+const layerArcticCircle: LineLayerSpecification = {
     id: 'arctic-circle-line',
     type: 'line',
     source: 'arctic-circle',
@@ -35,7 +36,7 @@ const layerArcticCircle = {
     }
 };
 
-const layerAntarcticCircle = {
+const layerAntarcticCircle: LineLayerSpecification = {
     id: 'antarctic-circle-line',
     type: 'line',
     source: 'antarctic-circle',
@@ -50,17 +51,18 @@ const layerAntarcticCircle = {
     }
 };
 
-const sourceArcticCenter = {
+const sourceArcticCenter: GeoJSONSourceSpecification = {
     type: 'geojson',
     data: {
         type: 'Feature',
         geometry: {
             type: 'Point',
             coordinates: [0, 90]
-        }
-    }
+        },
+        properties: {}
+    },
 };
-const layerArcticLabel = {
+const layerArcticLabel: SymbolLayerSpecification = {
     id: 'arctic-circle-label',
     type: 'symbol',
     source: 'arctic-circle-center',
@@ -76,17 +78,18 @@ const layerArcticLabel = {
         'text-halo-width': 2
     }
 };
-const sourceAntarcticCenter = {
+const sourceAntarcticCenter: GeoJSONSourceSpecification = {
     type: 'geojson',
     data: {
         type: 'Feature',
         geometry: {
             type: 'Point',
             coordinates: [0, -85]
-        }
+        },
+        properties: {}
     }
 };
-const layerAntarcticLabel = {
+const layerAntarcticLabel: SymbolLayerSpecification = {
     id: 'antarctic-circle-label',
     type: 'symbol',
     source: 'antarctic-circle-center',
