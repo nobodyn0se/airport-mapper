@@ -1,3 +1,5 @@
+import {Marker} from "mapbox-gl";
+
 export type Airport = {
     name: string;
     icao: string;
@@ -14,4 +16,8 @@ export type PolylineRoute = {
     distance: number[];
     name: string;
     airports: string[];
+}
+
+export interface AirportMarker extends Marker {
+    iata?: string;
 }
