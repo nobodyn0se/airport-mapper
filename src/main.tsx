@@ -1,7 +1,7 @@
 import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
 import './index.css'
-import GCMapper from './GCMapper.jsx'
+import GCMapper from './GCMapper.tsx'
 
 const rootElement = document.getElementById('root');
 

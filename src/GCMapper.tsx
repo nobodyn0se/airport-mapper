@@ -4,14 +4,15 @@ import SearchPane from "@components/SearchPane.tsx";
 import RouteList from "@components/RouteList.tsx";
 import React, {useEffect, useState, Suspense, startTransition} from "react";
 import {FaBars} from "react-icons/fa";
-import MapSpinner from "@util/MapSpinner.jsx";
+import MapSpinner from "@util/MapSpinner.tsx";
 
 const LazyMap = React.lazy(() => import("@components/MapComponent.tsx"))
-const FakeLazyMap = React.lazy(() => new Promise(resolve => {
-    setTimeout(() => {
-        resolve(import('./components/FakeLazyMap'));
-    }, 5000); // delay import by 5 seconds
-}));
+// using async await to avoid promise chaining mismatch
+const FakeLazyMap = React.lazy(async () => {
+    await new Promise(resolve => setTimeout(resolve, 5000)); // delay 5 seconds
+    const module = await import('@components/FakeLazyMap.tsx');
+    return {default: module.default};
+});
 
 function GCMapper() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);

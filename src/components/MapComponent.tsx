@@ -13,7 +13,7 @@ import {
     layerArcticCircle, layerArcticLabel, sourceAntarcticCenter,
     sourceAntarcticCircle, sourceArcticCenter,
     sourceArcticCircle
-} from "@util/map-features.js";
+} from "@util/map-features.ts";
 import {AirportMarker} from "@customTypes/global.types.ts";
 
 function MapComponent() {

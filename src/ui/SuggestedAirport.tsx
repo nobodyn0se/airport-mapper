@@ -1,4 +1,6 @@
-function SuggestedAirport(props) {
+import {Airport} from "@customTypes/global.types.ts";
+
+function SuggestedAirport(props: { item: Airport }) {
     return <>
         <div className="flex justify-between items-center">
             <div>

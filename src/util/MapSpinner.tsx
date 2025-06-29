@@ -1,5 +1,4 @@
 import {ImSpinner3} from "react-icons/im";
-import React from "react";
 
 function MapSpinner() {
     return (

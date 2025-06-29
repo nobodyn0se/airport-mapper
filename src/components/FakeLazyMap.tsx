@@ -1,5 +1,3 @@
-import React from 'react';
-
 function FakeLazyMap() {
     return (
         <div>Map Placeholder</div>

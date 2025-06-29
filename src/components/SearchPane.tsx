@@ -3,8 +3,8 @@ import {airportMarkerAtom, currentAirportMarkerAtom, polylinesAtom} from "@state
 import {MdDeleteForever} from "react-icons/md";
 import {useEffect, useMemo, useState} from "react";
 import debounce from "lodash.debounce";
-import SuggestedAirport from "@ui/SuggestedAirport.jsx";
-import {createNewPolylineRoute} from "@util/util.js";
+import SuggestedAirport from "@ui/SuggestedAirport.tsx";
+import {createNewPolylineRoute} from "@util/util.ts";
 
 import {Airport, PolylineRoute} from "@customTypes/global.types.ts";
 
