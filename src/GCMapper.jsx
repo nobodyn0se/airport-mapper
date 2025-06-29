@@ -1,7 +1,7 @@
 import './GCMapper.css';
 
 import SearchPane from "@components/SearchPane.tsx";
-import RouteList from "@components/RouteList.jsx";
+import RouteList from "@components/RouteList.tsx";
 import React, {useEffect, useState, Suspense, startTransition} from "react";
 import {FaBars} from "react-icons/fa";
 import MapSpinner from "@util/MapSpinner.jsx";
