@@ -1,5 +1,5 @@
 import {useAtom} from "jotai";
-import {airportMarkerAtom, currentAirportMarkerAtom, polylinesAtom} from "@state/atoms.jsx";
+import {airportMarkerAtom, currentAirportMarkerAtom, polylinesAtom} from "@state/atoms.ts";
 import {MdDeleteForever} from "react-icons/md";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import debounce from "lodash.debounce";
