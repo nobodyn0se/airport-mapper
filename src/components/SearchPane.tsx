@@ -1,25 +1,102 @@
 import {useAtom} from "jotai";
 import {airportMarkerAtom, currentAirportMarkerAtom, polylinesAtom} from "@state/atoms.ts";
 import {MdDeleteForever} from "react-icons/md";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import debounce from "lodash.debounce";
 import SuggestedAirport from "@ui/SuggestedAirport.jsx";
 import {createNewPolylineRoute} from "@util/util.js";
 
-async function getAirportSearch(query) {
-    const coordinates = [{
-        name: 'Almaty', long: 77.043, lat: 43.354
-    }, {name: 'Tashkent', long: 69.281, lat: 41.258}, {name: 'Baku', long: 50.047, lat: 40.467}, {
-        name: 'Tehran',
-        long: 51.152198791503906,
-        lat: 35.416099548339844
-    }]
+import {Airport, PolylineRoute} from "../types/global.types.ts";
+
+async function getAirportSearch(query: string): Promise<Airport[]> {
+    const coordinates: Airport[] = [{
+        "name": "Hassi R'Mel Airport",
+        "icao": "DAFH",
+        "iata": "HRM",
+        "lat": 32.930401,
+        "long": 3.31154,
+        "municipality": "Hassi R'Mel",
+        "country": "DZ"
+    }, {
+        "name": "Djerba Zarzis International Airport",
+        "icao": "DTTJ",
+        "iata": "DJE",
+        "lat": 33.875,
+        "long": 10.7755,
+        "municipality": "Mellita",
+        "country": "TN"
+    }, {
+        "name": "Gordil Airport",
+        "icao": "FEGL",
+        "iata": "GDI",
+        "lat": 9.581117,
+        "long": 21.728172,
+        "municipality": "Melle",
+        "country": "CF"
+    }, {
+        "name": "Melilla Airport",
+        "icao": "GEML",
+        "iata": "MLN",
+        "lat": 35.2798,
+        "long": -2.95626,
+        "municipality": "Melilla",
+        "country": "ES"
+    }, {
+        "name": "Beni Mellal Airport",
+        "icao": "GMMD",
+        "iata": "BEM",
+        "lat": 32.401895,
+        "long": -6.315905,
+        "municipality": "Oulad Yaich",
+        "country": "MA"
+    }, {
+        "name": "Sania Ramel Airport",
+        "icao": "GMTN",
+        "iata": "TTU",
+        "lat": 35.594299,
+        "long": -5.32002,
+        "municipality": "Tétouan",
+        "country": "MA"
+    }, {
+        "name": "Bujumbura Melchior Ndadaye International Airport",
+        "icao": "HBBA",
+        "iata": "BJM",
+        "lat": -3.32402,
+        "long": 29.318501,
+        "municipality": "Bujumbura",
+        "country": "BI"
+    }, {
+        "name": "Accomack County Airport",
+        "icao": "KMFV",
+        "iata": "MFV",
+        "lat": 37.646900177,
+        "long": -75.761100769,
+        "municipality": "Melfa",
+        "country": "US"
+    }, {
+        "name": "Melbourne Orlando International Airport",
+        "icao": "KMLB",
+        "iata": "MLB",
+        "lat": 28.1028,
+        "long": -80.645302,
+        "municipality": "Melbourne",
+        "country": "US"
+    }, {
+        "name": "Hévíz–Balaton Airport",
+        "icao": "LHSM",
+        "iata": "SOB",
+        "lat": 46.686391,
+        "long": 17.159084,
+        "municipality": "Sármellék",
+        "country": "HU"
+    }];
 
     const params = new URLSearchParams({searchTerm: query});
 
     try {
         const response = await fetch(`${import.meta.env.VITE_API_BASEURL}/airports/get/search?${params}`);
-        const data = await response.json();
+        const data: Airport[] = await response.json();
+        console.log(data);
         return data;
     } catch (error) {
         console.log(error);
@@ -28,7 +105,7 @@ async function getAirportSearch(query) {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(coordinates);
-        }, 1000);
+        });
     })
 }
 
@@ -37,10 +114,10 @@ function SearchPane() {
     const [currentAirportMarkers, setCurrentAirportMarkers] = useAtom(currentAirportMarkerAtom);
     const [, setPolylines] = useAtom(polylinesAtom);
 
-    const [searchSuggestions, setSearchSuggestions] = useState([]);
+    const [searchSuggestions, setSearchSuggestions] = useState<Airport[]>([]);
     const [query, setQuery] = useState('');
 
-    const handleSearch = async (searchQuery) => {
+    const handleSearch = async (searchQuery: string) => {
         const suggestions = await getAirportSearch(searchQuery);
         setSearchSuggestions(suggestions);
     }
@@ -51,7 +128,7 @@ function SearchPane() {
         setPolylines([]);
     }
 
-    const handleSelectAirport = (selectedAirport) => {
+    const handleSelectAirport = (selectedAirport: Airport) => {
         setAirportMarkers((airportList) => {
             if (airportList.some(existingAirport => existingAirport.name === selectedAirport.name)) return airportList;
             return [...airportList, selectedAirport];
@@ -74,7 +151,7 @@ function SearchPane() {
             return;
         }
 
-        const newPolyline = createNewPolylineRoute(currentAirportMarkers);
+        const newPolyline: PolylineRoute = createNewPolylineRoute(currentAirportMarkers);
 
         setPolylines(prev => {
             // prevent duplicate route addition
@@ -89,7 +166,7 @@ function SearchPane() {
     }
 
     const debouncedSearch = useMemo(() => {
-        return debounce(async (searchQuery) => {
+        return debounce(async (searchQuery: string) => {
             if (!searchQuery.trim()) {
                 setSearchSuggestions([]);
                 return;

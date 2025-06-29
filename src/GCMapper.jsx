@@ -1,6 +1,6 @@
 import './GCMapper.css';
 
-import SearchPane from "@components/SearchPane.jsx";
+import SearchPane from "@components/SearchPane.tsx";
 import RouteList from "@components/RouteList.jsx";
 import React, {useEffect, useState, Suspense, startTransition} from "react";
 import {FaBars} from "react-icons/fa";
