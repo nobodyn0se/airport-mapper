@@ -1,4 +1,4 @@
-import {antarcticCircle, arcticCircle} from "@util/util.js";
+import {antarcticCircle, arcticCircle} from "@util/util.ts";
 
 const sourceArcticCircle = {
     type: 'geojson',
