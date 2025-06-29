@@ -1,6 +1,6 @@
 import * as turf from '@turf/turf';
-import {Airport, PolylineRoute} from "../types/global.types.ts";
-import {GCCoordinates} from "@util/util.types.ts";
+import {Airport, PolylineRoute} from "@customTypes/global.types.ts";
+import {GCCoordinates} from "@customTypes/util.types.ts";
 
 const generateGreatCircle = (start: [number, number], end: [number, number], numPoints = 10): [number, number][] => {
     const startPoint = turf.point(start);  // Start coordinates [longitude, latitude]
