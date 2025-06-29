@@ -4,7 +4,7 @@ import MapboxDraw from '@mapbox/mapbox-gl-draw'; // Mapbox GL Draw plugin
 import * as MapboxDrawGeodesic from 'mapbox-gl-draw-geodesic';
 
 import {useAtomValue} from "jotai";
-import {airportMarkerAtom, polylinesAtom} from "../state/atoms.jsx";
+import {airportMarkerAtom, polylinesAtom} from "@state/atoms.jsx";
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
@@ -13,7 +13,7 @@ import {
     layerArcticCircle, layerArcticLabel, sourceAntarcticCenter,
     sourceAntarcticCircle, sourceArcticCenter,
     sourceArcticCircle
-} from "../util/map-features.js";
+} from "@util/map-features.js";
 
 function MapComponent() {
     const mapRef = useRef();

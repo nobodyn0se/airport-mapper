@@ -1,4 +1,4 @@
-import {polylinesAtom} from "../state/atoms.jsx";
+import {polylinesAtom} from "@state/atoms.jsx";
 import {useAtomValue} from "jotai";
 
 function RouteList() {

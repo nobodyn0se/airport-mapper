@@ -1,10 +1,10 @@
 import './GCMapper.css';
 
-import SearchPane from "./components/SearchPane.jsx";
-import RouteList from "./components/RouteList.jsx";
+import SearchPane from "@components/SearchPane.jsx";
+import RouteList from "@components/RouteList.jsx";
 import React, {useEffect, useState, Suspense, startTransition} from "react";
 import {FaBars} from "react-icons/fa";
-import MapSpinner from "./util/MapSpinner.jsx";
+import MapSpinner from "@util/MapSpinner.jsx";
 
 const LazyMap = React.lazy(() => import("./components/MapComponent.jsx"))
 const FakeLazyMap = React.lazy(() => new Promise(resolve => {

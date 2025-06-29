@@ -1,10 +1,10 @@
 import {useAtom} from "jotai";
-import {airportMarkerAtom, currentAirportMarkerAtom, polylinesAtom} from "../state/atoms.jsx";
+import {airportMarkerAtom, currentAirportMarkerAtom, polylinesAtom} from "@state/atoms.jsx";
 import {MdDeleteForever} from "react-icons/md";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import debounce from "lodash.debounce";
-import SuggestedAirport from "../ui/SuggestedAirport.jsx";
-import {createNewPolylineRoute} from "../util/util.js";
+import SuggestedAirport from "@ui/SuggestedAirport.jsx";
+import {createNewPolylineRoute} from "@util/util.js";
 
 async function getAirportSearch(query) {
     const coordinates = [{
