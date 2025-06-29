@@ -6,7 +6,7 @@ import React, {useEffect, useState, Suspense, startTransition} from "react";
 import {FaBars} from "react-icons/fa";
 import MapSpinner from "@util/MapSpinner.jsx";
 
-const LazyMap = React.lazy(() => import("./components/MapComponent.jsx"))
+const LazyMap = React.lazy(() => import("@components/MapComponent.tsx"))
 const FakeLazyMap = React.lazy(() => new Promise(resolve => {
     setTimeout(() => {
         resolve(import('./components/FakeLazyMap'));

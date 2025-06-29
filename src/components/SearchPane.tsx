@@ -6,7 +6,7 @@ import debounce from "lodash.debounce";
 import SuggestedAirport from "@ui/SuggestedAirport.jsx";
 import {createNewPolylineRoute} from "@util/util.js";
 
-import {Airport, PolylineRoute} from "../types/global.types.ts";
+import {Airport, PolylineRoute} from "@customTypes/global.types.ts";
 
 async function getAirportSearch(query: string): Promise<Airport[]> {
     const coordinates: Airport[] = [{

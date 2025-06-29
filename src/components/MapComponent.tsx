@@ -14,7 +14,7 @@ import {
     sourceAntarcticCircle, sourceArcticCenter,
     sourceArcticCircle
 } from "@util/map-features.js";
-import {AirportMarker} from "../types/global.types.ts";
+import {AirportMarker} from "@customTypes/global.types.ts";
 
 function MapComponent() {
     const mapRef = useRef<mapboxgl.Map | null>(null);
