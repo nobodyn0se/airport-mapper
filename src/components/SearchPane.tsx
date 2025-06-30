@@ -7,6 +7,7 @@ import SuggestedAirport from "@ui/SuggestedAirport.tsx";
 import {createNewPolylineRoute} from "@util/util.ts";
 
 import {Airport, PolylineRoute} from "@customTypes/global.types.ts";
+import AirportChip from "@ui/AirportChip.tsx";
 
 /**
  * Fetches the list of airports for a given search string [query]
@@ -243,6 +244,11 @@ function SearchPane() {
                     onClick={handlePolylines}>
                 Add Route
             </button>
+            {currentAirportMarkers.length > 0 && (
+                currentAirportMarkers.map((currentAirport => (
+                    <AirportChip airport={currentAirport}/>
+                )))
+            )}
         </div>
     )
 }
