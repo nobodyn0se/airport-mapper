@@ -25,6 +25,10 @@ function MapComponent() {
     const airportMarkers = useAtomValue(airportMarkerAtom);
     const polylines = useAtomValue(polylinesAtom)
 
+    /**
+     * Tracks browser window width for responsiveness
+     * Returns a number to set the map zoom directly
+     */
     function getResponsiveZoom() {
 
         const width = window.innerWidth;
@@ -33,6 +37,10 @@ function MapComponent() {
         return 2;
     }
 
+    /**
+     * Removes all route lines from the map
+     * @param drawInstance
+     */
     const clearPolylines = (drawInstance: MapboxDraw | null) => {
         if (drawInstance) {
             drawInstance.deleteAll();
@@ -51,6 +59,9 @@ function MapComponent() {
             });
         }
 
+        /**
+         * Resizes the map according to the current window width
+         */
         const handleResize = () => {
             if (mapRef.current) {
                 const newZoom = getResponsiveZoom();
@@ -108,7 +119,10 @@ function MapComponent() {
 
         const mapInstance = mapRef.current; // Get the current map instance
 
-        const handleMapLoad = () => {
+        /**
+         * Initializes and adds geodesic draw tool reference for creating polyline-based routes
+         */
+        const initGeodesicDrawTool = () => {
             let modes = MapboxDraw.modes;
             modes = MapboxDrawGeodesic.enable(modes);
 
@@ -136,6 +150,9 @@ function MapComponent() {
             mapInstance.addControl(drawRef.current);
         };
 
+        /**
+         * Adds polar cap centers, dashed circular boundary and labels
+         */
         function loadPolarCircles() {
             mapInstance.addSource('arctic-circle', sourceArcticCircle);
             mapInstance.addSource('antarctic-circle', sourceAntarcticCircle);
@@ -151,7 +168,7 @@ function MapComponent() {
         }
 
         mapInstance.on('load', () => {
-            handleMapLoad();
+            initGeodesicDrawTool();
             loadPolarCircles();
         });
 
@@ -160,7 +177,7 @@ function MapComponent() {
                 clearPolylines(drawRef.current); // Clear all features managed by Draw
                 mapInstance.removeControl(drawRef.current);
                 drawRef.current = null; // Clear the ref
-                mapInstance.off('load', handleMapLoad); // Remove event listener
+                mapInstance.off('load', initGeodesicDrawTool); // Remove event listener
                 mapInstance.off('load', loadPolarCircles);
             }
         };
@@ -171,6 +188,9 @@ function MapComponent() {
             return;
         }
 
+        /**
+         * Creates a new polyline route from the latest addition to the polyline tracking list
+         */
         const addPolylines = () => {
             const newPolyline = polylines[polylines.length - 1];
 

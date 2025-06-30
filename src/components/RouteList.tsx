@@ -1,6 +1,10 @@
 import {polylinesAtom} from "@state/atoms.ts";
 import {useAtomValue} from "jotai";
 
+/**
+ * Shows the list of routes below the search bar [SearchPane]
+ * @constructor
+ */
 function RouteList() {
     const polylines = useAtomValue(polylinesAtom);
 

@@ -8,6 +8,11 @@ import {createNewPolylineRoute} from "@util/util.ts";
 
 import {Airport, PolylineRoute} from "@customTypes/global.types.ts";
 
+/**
+ * Fetches the list of airports for a given search string [query]
+ * @param query
+ * @returns {Airport[]} a list of objects of type {@link Airport} if successful
+ */
 async function getAirportSearch(query: string): Promise<Airport[]> {
     const coordinates: Airport[] = [{
         "name": "Hassi R'Mel Airport",
@@ -109,6 +114,11 @@ async function getAirportSearch(query: string): Promise<Airport[]> {
     })
 }
 
+/**
+ * Contains the search bar and route creation button
+ * Displays a dropdown suggestion when the user searches for an airport
+ * @constructor
+ */
 function SearchPane() {
     const [, setAirportMarkers] = useAtom(airportMarkerAtom);
     const [currentAirportMarkers, setCurrentAirportMarkers] = useAtom(currentAirportMarkerAtom);
@@ -122,12 +132,20 @@ function SearchPane() {
         setSearchSuggestions(suggestions);
     }
 
+    /**
+     * Clears display markers (airportMarkers), routing markers (currentAirportMarkers) and routes (polylines)
+     */
     const handleDeleteAll = () => {
         setAirportMarkers([]);
         setCurrentAirportMarkers([]);
         setPolylines([]);
     }
 
+    /**
+     * Triggers when a user selects an airport from the dropdown suggestions
+     * Sets airportMarkers for displaying labels and currentAirportMarkers for route creation purposes
+     * @param selectedAirport
+     */
     const handleSelectAirport = (selectedAirport: Airport) => {
         setAirportMarkers((airportList) => {
             if (airportList.some(existingAirport => existingAirport.name === selectedAirport.name)) return airportList;
@@ -145,6 +163,10 @@ function SearchPane() {
         setSearchSuggestions([]);
     }
 
+    /**
+     * Creates a polyline route if at least 2 airports are selected (currentAirportMarkers)
+     * Prevents the same route from being duplicated in the list
+     */
     const handlePolylines = () => {
         if (currentAirportMarkers.length < 2) {
             console.warn('At least 2 airports needed for a route');
