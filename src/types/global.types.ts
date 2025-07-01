@@ -8,6 +8,7 @@ export type Airport = {
     long: number;
     municipality: string;
     country: string;
+    usedInRoute?: number
 };
 
 export type PolylineRoute = {
