@@ -193,6 +193,20 @@ function MapComponent() {
          */
         const addPolylines = () => {
             const newPolyline = polylines[polylines.length - 1];
+            const airportsInRouteSet = new Set(newPolyline.airports);   // contains IATA list
+
+            // adding a counter to make deletion easier if airport NOT in more than one routes
+            for (const airport of airportMarkers) {
+                if (airportsInRouteSet.has(airport.iata)) {
+                    if (typeof airport.usedInRoute === 'number') {
+                        airport.usedInRoute += 1;
+                    } else {
+                        airport.usedInRoute = 1;
+                    }
+                }
+            }
+
+            console.log(airportMarkers);
 
             drawRef.current?.add({
                 id: newPolyline.name,
