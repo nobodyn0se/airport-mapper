@@ -3,8 +3,8 @@ import mapboxgl from "mapbox-gl";
 import MapboxDraw from '@mapbox/mapbox-gl-draw'; // Mapbox GL Draw plugin
 import * as MapboxDrawGeodesic from 'mapbox-gl-draw-geodesic';
 
-import {useAtomValue} from "jotai";
-import {airportMarkerAtom, polylinesAtom} from "@state/atoms.ts";
+import {useAtom, useAtomValue} from "jotai";
+import {airportMarkerAtom, markerDeletionAtom, polylinesAtom} from "@state/atoms.ts";
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
@@ -23,7 +23,8 @@ function MapComponent() {
     const drawRef = useRef<MapboxDraw | null>(null);
 
     const airportMarkers = useAtomValue(airportMarkerAtom);
-    const polylines = useAtomValue(polylinesAtom)
+    const polylines = useAtomValue(polylinesAtom);
+    const [iataMarkerToDelete, setIATAMarkerToDelete] = useAtom(markerDeletionAtom);
 
     /**
      * Tracks browser window width for responsiveness
@@ -113,6 +114,19 @@ function MapComponent() {
 
         // Cleanup function interferes with the marker list persistence, hence disabled
     }, [airportMarkers])
+
+    useEffect(() => {
+        if (iataMarkerToDelete !== '') {
+            console.log('Entered marker deletion block')
+            const updatedMarkers = markerRef.current?.filter(marker => {
+                if (marker.iata === iataMarkerToDelete) {
+                    marker.remove();
+                }
+            });
+            markerRef.current.push(...updatedMarkers);
+            setIATAMarkerToDelete('');
+        }
+    }, [iataMarkerToDelete]);
 
     useEffect(() => {
         if (!mapRef.current) return;
