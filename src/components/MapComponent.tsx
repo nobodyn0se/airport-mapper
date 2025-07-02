@@ -99,7 +99,6 @@ function MapComponent() {
         const createAirportMarker = (mapInstance: mapboxgl.Map) => {
             const unmarkedAirport = airportMarkers[airportMarkers.length - 1];
 
-            console.log('Entered marker creation')
             const marker: AirportMarker = new mapboxgl.Marker({
                 color: "#B22222"
             })
@@ -132,7 +131,6 @@ function MapComponent() {
 
     useEffect(() => {
         if (iataMarkerToDelete !== '') {
-            console.log('Entered marker deletion block')
             const updatedMarkers = markerRef.current?.filter(marker => {
                 if (marker.iata === iataMarkerToDelete) {
                     marker.remove();
@@ -234,8 +232,6 @@ function MapComponent() {
                     }
                 }
             }
-
-            console.log(airportMarkers);
 
             drawRef.current?.add({
                 id: newPolyline.name,
