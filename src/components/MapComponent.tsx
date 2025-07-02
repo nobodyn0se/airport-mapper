@@ -26,6 +26,8 @@ function MapComponent() {
     const polylines = useAtomValue(polylinesAtom);
     const [iataMarkerToDelete, setIATAMarkerToDelete] = useAtom(markerDeletionAtom);
 
+    const trackMarkedLengthRef = useRef<number>(airportMarkers.length);
+
     /**
      * Tracks browser window width for responsiveness
      * Returns a number to set the map zoom directly
@@ -92,6 +94,7 @@ function MapComponent() {
 
         if (airportMarkers.length === 0) {
             removeAllMarkers();
+            trackMarkedLengthRef.current = airportMarkers.length;
             return;
         }
 
@@ -99,7 +102,7 @@ function MapComponent() {
 
         console.log('Markers length', airportMarkers.length);
 
-        if (!markerRef.current.some(markedAirport => markedAirport.iata === unmarkedAirport.iata)) {
+        if (airportMarkers.length > trackMarkedLengthRef.current) {
             console.log('Entered marker creation')
             const marker: AirportMarker = new mapboxgl.Marker({
                 color: "#B22222"
@@ -116,6 +119,8 @@ function MapComponent() {
             const lastAirport = airportMarkers[airportMarkers.length - 1];
             mapRef.current.easeTo({center: [lastAirport.long, lastAirport.lat], duration: 500});
         }
+
+        trackMarkedLengthRef.current = airportMarkers.length;
 
         // Cleanup function interferes with the marker list persistence, hence disabled
     }, [airportMarkers])
