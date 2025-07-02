@@ -1,7 +1,6 @@
 import {Airport} from "@customTypes/global.types.ts";
 import {airportMarkerAtom, currentAirportMarkerAtom, markerDeletionAtom} from "@state/atoms.ts";
 import {useAtom} from "jotai";
-import {useEffect} from "react";
 
 /**
  * Standalone component with containerized styling to show currently selected airports as chips under the Add Route button
@@ -30,7 +29,7 @@ function Chip({airport, deletionIndex}: { airport: Airport, deletionIndex: numbe
             const countInSelectedList = currentMarkers.reduce((count, airport) => {
                 return airport.iata === iata ? count + 1 : count;
             }, 0);
-            
+
             if (typeof airport?.usedInRoute === 'number' && airport.usedInRoute > 0 || countInSelectedList > 1) {
                 // skip deletion if airport already in route(s) or spans multiple sectors in current selection eg. LHR-DXB-LHR
                 return markedAirports;
@@ -41,10 +40,6 @@ function Chip({airport, deletionIndex}: { airport: Airport, deletionIndex: numbe
             }
         }));
     }
-
-    useEffect(() => {
-        console.log('Current markers length', currentMarkers.length);
-    }, [currentMarkers]);
 
     return (
         <div className="inline-flex items-center bg-gray-300 text-gray-800 rounded-full my-2 mx-1 px-3 py-1 text-sm">
