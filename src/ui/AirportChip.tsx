@@ -51,7 +51,7 @@ function Chip({airport, deletionIndex}: { airport: Airport, deletionIndex: numbe
     }, [currentMarkers]);
 
     return (
-        <div className="inline-flex items-center bg-gray-300 text-gray-800 rounded-full px-3 py-1 text-sm">
+        <div className="inline-flex items-center bg-gray-300 text-gray-800 rounded-full my-2 mx-1 px-3 py-1 text-sm">
             <span>{airport.iata}</span>
             <button
                 type="button"
