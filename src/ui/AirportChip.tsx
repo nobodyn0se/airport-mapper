@@ -30,13 +30,9 @@ function Chip({airport, deletionIndex}: { airport: Airport, deletionIndex: numbe
             const countInSelectedList = currentMarkers.reduce((count, airport) => {
                 return airport.iata === iata ? count + 1 : count;
             }, 0);
-
-            if (typeof airport?.usedInRoute === 'number' && airport.usedInRoute > 0) {
-                // decrement the use count if airport already in another route, skip deletion of marker
-                markedAirports[index] = {...airport, usedInRoute: airport.usedInRoute - 1};
-                return markedAirports;
-            } else if (countInSelectedList > 1) {
-                // skip the marker deletion if airport in multiple sectors of current selection
+            
+            if (typeof airport?.usedInRoute === 'number' && airport.usedInRoute > 0 || countInSelectedList > 1) {
+                // skip deletion if airport already in route(s) or spans multiple sectors in current selection eg. LHR-DXB-LHR
                 return markedAirports;
             } else {
                 // delete from the list n markers
