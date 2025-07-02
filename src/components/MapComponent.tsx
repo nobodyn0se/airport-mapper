@@ -92,24 +92,20 @@ function MapComponent() {
             markerRef.current = [];
         }
 
-        if (airportMarkers.length === 0) {
-            removeAllMarkers();
-            trackMarkedLengthRef.current = airportMarkers.length;
-            return;
-        }
+        /**
+         * Creates a new marker for the latest airport in the airport markers list (guaranteed to be unique)
+         * @param mapInstance
+         */
+        const createAirportMarker = (mapInstance: mapboxgl.Map) => {
+            const unmarkedAirport = airportMarkers[airportMarkers.length - 1];
 
-        const unmarkedAirport = airportMarkers[airportMarkers.length - 1];
-
-        console.log('Markers length', airportMarkers.length);
-
-        if (airportMarkers.length > trackMarkedLengthRef.current) {
             console.log('Entered marker creation')
             const marker: AirportMarker = new mapboxgl.Marker({
                 color: "#B22222"
             })
                 .setLngLat([unmarkedAirport.long, unmarkedAirport.lat])
                 .setPopup(new mapboxgl.Popup({closeButton: false}).setText(unmarkedAirport.name)) // Optional: Add popup with city name
-                .addTo(mapRef.current);
+                .addTo(mapInstance);
 
             // Added iata ident to each marker
             marker.iata = unmarkedAirport.iata;
@@ -117,7 +113,16 @@ function MapComponent() {
 
             // move the map to the latest airport marker
             const lastAirport = airportMarkers[airportMarkers.length - 1];
-            mapRef.current.easeTo({center: [lastAirport.long, lastAirport.lat], duration: 500});
+            mapInstance.easeTo({center: [lastAirport.long, lastAirport.lat], duration: 500});
+        }
+
+        if (airportMarkers.length === 0) {
+            removeAllMarkers();
+        } else {
+            // adds a new marker only if the marker list size increases aka new airport is added
+            if (airportMarkers.length > trackMarkedLengthRef.current) {
+                createAirportMarker(mapRef.current);
+            }
         }
 
         trackMarkedLengthRef.current = airportMarkers.length;
