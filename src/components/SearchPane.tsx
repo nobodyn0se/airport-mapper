@@ -245,9 +245,9 @@ function SearchPane() {
                 Add Route
             </button>
             {currentAirportMarkers.length > 0 && (
-                currentAirportMarkers.map((currentAirport => (
-                    <AirportChip airport={currentAirport}/>
-                )))
+                currentAirportMarkers.map((currentAirport, index) => (
+                    <AirportChip airport={currentAirport} deletionIndex={index}/>
+                ))
             )}
         </div>
     )
