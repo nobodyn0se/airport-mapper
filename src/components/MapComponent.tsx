@@ -97,20 +97,25 @@ function MapComponent() {
 
         const unmarkedAirport = airportMarkers[airportMarkers.length - 1];
 
-        const marker: AirportMarker = new mapboxgl.Marker({
-            color: "#B22222"
-        })
-            .setLngLat([unmarkedAirport.long, unmarkedAirport.lat])
-            .setPopup(new mapboxgl.Popup({closeButton: false}).setText(unmarkedAirport.name)) // Optional: Add popup with city name
-            .addTo(mapRef.current);
+        console.log('Markers length', airportMarkers.length);
 
-        // Added iata ident to each marker
-        marker.iata = unmarkedAirport.iata;
-        markerRef.current.push(marker); // track it
+        if (!markerRef.current.some(markedAirport => markedAirport.iata === unmarkedAirport.iata)) {
+            console.log('Entered marker creation')
+            const marker: AirportMarker = new mapboxgl.Marker({
+                color: "#B22222"
+            })
+                .setLngLat([unmarkedAirport.long, unmarkedAirport.lat])
+                .setPopup(new mapboxgl.Popup({closeButton: false}).setText(unmarkedAirport.name)) // Optional: Add popup with city name
+                .addTo(mapRef.current);
 
-        // move the map to the latest airport marker
-        const lastAirport = airportMarkers[airportMarkers.length - 1];
-        mapRef.current.easeTo({center: [lastAirport.long, lastAirport.lat], duration: 500});
+            // Added iata ident to each marker
+            marker.iata = unmarkedAirport.iata;
+            markerRef.current.push(marker); // track it
+
+            // move the map to the latest airport marker
+            const lastAirport = airportMarkers[airportMarkers.length - 1];
+            mapRef.current.easeTo({center: [lastAirport.long, lastAirport.lat], duration: 500});
+        }
 
         // Cleanup function interferes with the marker list persistence, hence disabled
     }, [airportMarkers])
