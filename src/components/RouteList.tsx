@@ -1,5 +1,6 @@
 import {polylinesAtom} from "@state/atoms.ts";
 import {useAtomValue} from "jotai";
+import {calculateTotalDistance} from "@util/util.ts";
 
 /**
  * Shows the list of routes below the search bar [SearchPane]
@@ -7,11 +8,12 @@ import {useAtomValue} from "jotai";
  */
 function RouteList() {
     const polylines = useAtomValue(polylinesAtom);
+    const totalAllRoutes = calculateTotalDistance(polylines.map(polyline => polyline.totalRouteDistance));
 
     return (
         <div>
             <div className="mb-4 p-4 border border-gray-300 rounded">
-                <h4 className="font-semibold">Total Distance: 0 km</h4>
+                <h4 className="font-semibold">Total Distance: {totalAllRoutes} km</h4>
                 <ul className="list-disc pl-5">
                     <li>Route breakdown will appear here</li>
                 </ul>
