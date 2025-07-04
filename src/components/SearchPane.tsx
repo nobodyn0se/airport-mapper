@@ -99,21 +99,24 @@ async function getAirportSearch(query: string): Promise<Airport[]> {
         "country": "HU"
     }];
 
-    const params = new URLSearchParams({searchTerm: query});
+    return new Promise(async (resolve) => {
+        const params = new URLSearchParams({searchTerm: query});
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASEURL}/airports/get/search?${params}`);
 
-    try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASEURL}/airports/get/search?${params}`);
-        const data: Airport[] = await response.json();
-        console.log(data);
-        return data;
-    } catch (error) {
-        console.log(error);
-    }
-
-    return new Promise((resolve) => {
-        setTimeout(() => {
+            if (!response.ok) {
+                const httpError: { url: string, status: number, message: string } = await response.json();
+                console.log(`Error ${httpError.status}: ${httpError.message}`);
+                // set toast message to indicate limited offline data
+                resolve(coordinates);
+            }
+            const data: Airport[] = await response.json();
+            console.log(data);
+            resolve(data);
+        } catch (error) {
+            console.log('Could not fetch real-time airports', error);
             resolve(coordinates);
-        });
+        }
     })
 }
 
