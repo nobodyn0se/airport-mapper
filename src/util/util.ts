@@ -81,9 +81,14 @@ function createNewPolylineRoute(currentAirportMarkers: Airport[]): PolylineRoute
         id: `poly-${Date.now()}`,
         coordinates: routePath.coordinates,            // use createGCPaths() above
         distance: routePath.distance,
+        totalRouteDistance: calculateTotalDistance(routePath.distance),
         name: routeName,
         airports: airportsIATAList
     };
+}
+
+function calculateTotalDistance(distanceList: number[]): number {
+    return Math.round(distanceList.reduce((total, distance) => total + distance, 0));
 }
 
 // function doesRoutePassPoles(routeLineString, polarCircle) {
@@ -116,5 +121,6 @@ function createNewPolylineRoute(currentAirportMarkers: Airport[]): PolylineRoute
 
 export {
     createGCPaths, arcticCircle, antarcticCircle, createNewPolylineRoute,
+    calculateTotalDistance
     // filterRouteLine
 };

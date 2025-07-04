@@ -15,6 +15,7 @@ export type PolylineRoute = {
     id: string;
     coordinates: [number, number][];
     distance: number[];
+    totalRouteDistance: number;
     name: string;
     airports: string[];
 }
