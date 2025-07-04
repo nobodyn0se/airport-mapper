@@ -233,8 +233,7 @@ function SearchPane() {
                                      onClick={handleDeleteAll}/>
                 </div>
             </div>
-
-            {searchSuggestions.length > 0 && (
+            {!lookupActive && query && (searchSuggestions.length > 0 ? (
                 <ul className="absolute left-0 right-0 border bg-gray-242424 border-gray-300 z-10 max-h-48 overflow-y-auto">
                     {searchSuggestions.map((item) => (
                         <li
@@ -248,7 +247,10 @@ function SearchPane() {
                         </li>
                     ))}
                 </ul>
-            )}
+            ) : <span
+                className="absolute left-0 right-0 border bg-gray-242424
+                border-gray-300 z-10 max-h-48 p-2 font-extralight text-gray-300 text-center">
+                No results found for this airport</span>)}
             <button className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
                     onClick={handlePolylines}>
                 Add Route
