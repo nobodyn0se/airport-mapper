@@ -1,5 +1,5 @@
 import {useAtom} from "jotai";
-import {airportMarkerAtom, currentAirportMarkerAtom, lookupActiveAtom, polylinesAtom} from "@state/atoms.ts";
+import {airportMarkerAtom, currentAirportMarkerAtom, lookupStateAtom, polylinesAtom} from "@state/atoms.ts";
 import {MdDeleteForever} from "react-icons/md";
 import {useEffect, useMemo, useState} from "react";
 import debounce from "lodash.debounce";
@@ -9,6 +9,7 @@ import {createNewPolylineRoute} from "@util/util.ts";
 import {Airport, PolylineRoute} from "@customTypes/global.types.ts";
 import AirportChip from "@ui/AirportChip.tsx";
 import {FaSpinner} from "react-icons/fa";
+import {LookupState} from "@customTypes/util.types.ts";
 
 /**
  * Fetches the list of airports for a given search string [query]
@@ -125,15 +126,24 @@ function SearchPane() {
     const [, setAirportMarkers] = useAtom(airportMarkerAtom);
     const [currentAirportMarkers, setCurrentAirportMarkers] = useAtom(currentAirportMarkerAtom);
     const [, setPolylines] = useAtom(polylinesAtom);
-    const [lookupActive, setLookupActive] = useAtom(lookupActiveAtom);
+    const [lookupState, setLookupState] = useAtom(lookupStateAtom);
 
     const [searchSuggestions, setSearchSuggestions] = useState<Airport[]>([]);
     const [query, setQuery] = useState('');
 
     const handleSearch = async (searchQuery: string) => {
-        setLookupActive(true);
-        const suggestions = await getAirportSearch(searchQuery).finally(() => setLookupActive(false));
-        setSearchSuggestions(suggestions);
+        setLookupState(LookupState.LOADING);
+        try {
+            const suggestions = await getAirportSearch(searchQuery);
+            if (suggestions.length === 0) {
+                setLookupState(LookupState.NODATA);
+            } else {
+                setLookupState(LookupState.HASDATA);
+            }
+            setSearchSuggestions(suggestions);
+        } catch (_) {
+            setLookupState(LookupState.ERROR);
+        }
     }
 
     /**
@@ -204,6 +214,9 @@ function SearchPane() {
     }, [])
 
     useEffect(() => {
+        if (query === '') {
+            setLookupState(LookupState.IDLE);
+        }
         debouncedSearch(query)
     }, [query, debouncedSearch])
 
@@ -224,33 +237,38 @@ function SearchPane() {
                         onChange={e => setQuery(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded mb-2"
                     />
-                    {lookupActive && (<div className="absolute pb-1.5 right-2 top-1/2 transform -translate-y-1/2">
-                        <FaSpinner className="animate-spin text-xl text-gray-500"/>
-                    </div>)}
+                    {lookupState === LookupState.LOADING && (
+                        <div className="absolute pb-1.5 right-2 top-1/2 transform -translate-y-1/2">
+                            <FaSpinner className="animate-spin text-xl text-gray-500"/>
+                        </div>)}
                 </div>
                 <div className="mb-2 flex items-center px-3 rounded cursor-pointer">
                     <MdDeleteForever title="Delete All Routes" className="text-xl text-red-500"
                                      onClick={handleDeleteAll}/>
                 </div>
             </div>
-            {!lookupActive && query && (searchSuggestions.length > 0 ? (
-                <ul className="absolute left-0 right-0 border bg-gray-242424 border-gray-300 z-10 max-h-48 overflow-y-auto">
-                    {searchSuggestions.map((item) => (
-                        <li
-                            key={item.name}
-                            className="p-2 hover:bg-gray-100 hover:text-black cursor-pointer"
-                            onClick={() => {
-                                handleSelectAirport(item)
-                            }}
-                        >
-                            <SuggestedAirport item={item}/>
-                        </li>
-                    ))}
-                </ul>
-            ) : <span
-                className="absolute left-0 right-0 border bg-gray-242424
+            {lookupState === LookupState.HASDATA &&
+                (
+                    <ul className="absolute left-0 right-0 border bg-gray-242424 border-gray-300 z-10 max-h-48 overflow-y-auto">
+                        {searchSuggestions.map((item) => (
+                            <li
+                                key={item.name}
+                                className="p-2 hover:bg-gray-100 hover:text-black cursor-pointer"
+                                onClick={() => {
+                                    handleSelectAirport(item)
+                                }}
+                            >
+                                <SuggestedAirport item={item}/>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            {lookupState === LookupState.NODATA && (
+                <span
+                    className="absolute left-0 right-0 border bg-gray-242424
                 border-gray-300 z-10 max-h-48 p-2 font-extralight text-gray-300 text-center">
-                No results found for this airport</span>)}
+                No results found for this airport</span>
+            )}
             <button className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
                     onClick={handlePolylines}>
                 Add Route
