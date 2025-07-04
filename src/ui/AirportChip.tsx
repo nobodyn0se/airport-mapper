@@ -20,7 +20,23 @@ function Chip({airport, deletionIndex}: { airport: Airport, deletionIndex: numbe
      * @param iata
      */
     const handleDeleteSelectedAirport = (iata: string) => {
-        setCurrentAirportMarkers((currentSelectedAirports => currentSelectedAirports.filter((_, index) => index !== deletionIndex)));
+        setCurrentAirportMarkers((currentSelectedAirports => {
+            currentSelectedAirports.splice(deletionIndex, 1);
+            
+            /* delete airport from the selection then recheck the previous airport in the selection
+             if same IATA, remove at current index and retain the previous
+             eg. HRM-GDI-HRM, delete GDI, selection now HRM-HRM, remove latest HRM, selection now HRM
+             prevents routing between the same airports according to app philosophy
+             */
+            if (currentSelectedAirports.length > 1) {
+                const previousAirportIATA = currentSelectedAirports[deletionIndex - 1].iata;
+                const currentAirportIATA = currentSelectedAirports[deletionIndex].iata
+
+                previousAirportIATA === currentAirportIATA && currentSelectedAirports.splice(deletionIndex, 1);
+            }
+            return currentSelectedAirports;
+        }));
+
         setAirportMarkers((markedAirports => {
             // dec usedInRoute if > 1, delete otherwise and setMarkersToDelete(iata) to trigger marker deletion
             const index = markedAirports.findIndex(markedAirport => markedAirport.iata === iata);
