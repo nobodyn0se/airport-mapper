@@ -1,5 +1,5 @@
 import {useAtom} from "jotai";
-import {airportMarkerAtom, currentAirportMarkerAtom, polylinesAtom} from "@state/atoms.ts";
+import {airportMarkerAtom, currentAirportMarkerAtom, lookupActiveAtom, polylinesAtom} from "@state/atoms.ts";
 import {MdDeleteForever} from "react-icons/md";
 import {useEffect, useMemo, useState} from "react";
 import debounce from "lodash.debounce";
@@ -8,6 +8,7 @@ import {createNewPolylineRoute} from "@util/util.ts";
 
 import {Airport, PolylineRoute} from "@customTypes/global.types.ts";
 import AirportChip from "@ui/AirportChip.tsx";
+import {FaSpinner} from "react-icons/fa";
 
 /**
  * Fetches the list of airports for a given search string [query]
@@ -124,12 +125,14 @@ function SearchPane() {
     const [, setAirportMarkers] = useAtom(airportMarkerAtom);
     const [currentAirportMarkers, setCurrentAirportMarkers] = useAtom(currentAirportMarkerAtom);
     const [, setPolylines] = useAtom(polylinesAtom);
+    const [lookupActive, setLookupActive] = useAtom(lookupActiveAtom);
 
     const [searchSuggestions, setSearchSuggestions] = useState<Airport[]>([]);
     const [query, setQuery] = useState('');
 
     const handleSearch = async (searchQuery: string) => {
-        const suggestions = await getAirportSearch(searchQuery);
+        setLookupActive(true);
+        const suggestions = await getAirportSearch(searchQuery).finally(() => setLookupActive(false));
         setSearchSuggestions(suggestions);
     }
 
@@ -213,18 +216,24 @@ function SearchPane() {
     return (
         <div className="mb-4 relative">
             <div className="flex w-full">
-                <input
-                    type="text"
-                    placeholder="Enter airport code"
-                    value={query}
-                    onChange={e => setQuery(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded mb-2"
-                />
+                <div className="relative w-full">
+                    <input
+                        type="text"
+                        placeholder="Enter airport code"
+                        value={query}
+                        onChange={e => setQuery(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded mb-2"
+                    />
+                    {lookupActive && (<div className="absolute pb-1.5 right-2 top-1/2 transform -translate-y-1/2">
+                        <FaSpinner className="animate-spin text-xl text-gray-500"/>
+                    </div>)}
+                </div>
                 <div className="mb-2 flex items-center px-3 rounded cursor-pointer">
                     <MdDeleteForever title="Delete All Routes" className="text-xl text-red-500"
                                      onClick={handleDeleteAll}/>
                 </div>
             </div>
+
             {searchSuggestions.length > 0 && (
                 <ul className="absolute left-0 right-0 border bg-gray-242424 border-gray-300 z-10 max-h-48 overflow-y-auto">
                     {searchSuggestions.map((item) => (
