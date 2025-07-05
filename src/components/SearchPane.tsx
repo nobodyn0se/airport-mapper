@@ -245,7 +245,7 @@ function SearchPane() {
                             <FaSpinner className="animate-spin text-xl text-gray-500"/>
                         </div>)}
                 </div>
-                <div className="mb-2 flex items-center px-3 rounded cursor-pointer">
+                <div className="mb-2 flex items-center px-3 rounded-full cursor-pointer hover:bg-gray-200">
                     <MdDeleteForever title="Delete All Routes" className="text-xl text-red-500"
                                      onClick={handleDeleteAll}/>
                 </div>
