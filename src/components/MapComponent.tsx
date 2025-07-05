@@ -177,6 +177,11 @@ function MapComponent() {
             });
 
             mapInstance.addControl(drawRef.current);
+
+            const mapboxCtrlGroup = document.querySelector(".mapbox-ctrl-group");
+            if (mapboxCtrlGroup) {
+                mapboxCtrlGroup.classList.add('hidden');
+            }
         };
 
         /**
