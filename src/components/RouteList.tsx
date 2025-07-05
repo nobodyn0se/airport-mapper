@@ -47,7 +47,7 @@ function RouteList() {
                                         ))}
                                     </div>
                                     <div
-                                        className="cursor-pointer text-lg p-1 text-amber-500 flex items-center">
+                                        className="cursor-pointer rounded-full text-lg p-1 text-amber-500 flex items-center hover:bg-gray-200">
                                         <MdRemoveCircle/></div>
                                 </aside>
                             </div>
