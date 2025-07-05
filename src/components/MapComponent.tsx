@@ -241,7 +241,7 @@ function MapComponent() {
             }
 
             drawRef.current?.add({
-                id: newPolyline.name,
+                id: newPolyline.id,
                 type: 'Feature',
                 geometry: {
                     type: 'LineString',
