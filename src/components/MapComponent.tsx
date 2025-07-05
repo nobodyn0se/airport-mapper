@@ -109,7 +109,7 @@ function MapComponent() {
 
             // Added iata ident to each marker
             marker.iata = unmarkedAirport.iata;
-            markerRef.current.push(marker); // track it
+            markerRef.current = [...markerRef.current, marker]; // track it
 
             // move the map to the latest airport marker
             const lastAirport = airportMarkers[airportMarkers.length - 1];
@@ -132,12 +132,13 @@ function MapComponent() {
 
     useEffect(() => {
         if (iataMarkerToDelete !== '') {
-            const updatedMarkers = markerRef.current?.filter(marker => {
+            markerRef.current = markerRef.current.filter(marker => {
                 if (marker.iata === iataMarkerToDelete) {
                     marker.remove();
+                    return false;
                 }
+                return true;
             });
-            markerRef.current.push(...updatedMarkers);
             setIATAMarkerToDelete('');
         }
     }, [iataMarkerToDelete]);
