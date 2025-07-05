@@ -1,6 +1,7 @@
 import {polylinesAtom} from "@state/atoms.ts";
 import {useAtomValue} from "jotai";
 import {calculateTotalDistance} from "@util/util.ts";
+import {MdRemoveCircle} from "react-icons/md";
 
 /**
  * Shows the list of routes below the search bar [SearchPane]
@@ -22,7 +23,7 @@ function RouteList() {
             <section className="h-5/6 overflow-y-auto divide-y divide-gray-500">
                 {polylines && polylines.map((route) => (
                     <ul className="max-w-md mx-auto my-2 rounded-lg overflow-hidden">
-                        <li key={route.name} className="px-4 py-3">
+                        <li key={route.name} className="pl-2 pr-1 py-3">
                             <div className="flex justify-between items-center">
                                 <div className="flex flex-col space-x-2">
                                     {route.airports.slice(0, -1).map((airport, i) => (
@@ -34,15 +35,20 @@ function RouteList() {
                                     ))}
                                 </div>
 
-                                <aside className="flex flex-col">
-                                    {route.distance.map((distance, i) => (
-                                        <span
-                                            key={i}
-                                            className="font-semibold text-right"
-                                        >
-                                    {distance.toFixed(2)}
+                                <aside className="flex">
+                                    <div className="flex flex-col">
+                                        {route.distance.map((distance, i) => (
+                                            <span
+                                                key={i}
+                                                className="font-semibold text-right"
+                                            >
+                                    {distance.toFixed(2)} <span className="text-gray-800 font-medium">km</span>
                                     </span>
-                                    ))}
+                                        ))}
+                                    </div>
+                                    <div
+                                        className="cursor-pointer text-lg p-1 text-amber-500 flex items-center">
+                                        <MdRemoveCircle/></div>
                                 </aside>
                             </div>
                         </li>
