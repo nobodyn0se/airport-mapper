@@ -103,7 +103,8 @@ function MapComponent() {
                 color: "#B22222"
             })
                 .setLngLat([unmarkedAirport.long, unmarkedAirport.lat])
-                .setPopup(new mapboxgl.Popup({closeButton: false}).setText(unmarkedAirport.name)) // Optional: Add popup with city name
+                .setPopup(new mapboxgl.Popup({closeButton: false}).setText(`${unmarkedAirport.name} (${unmarkedAirport.icao}),
+                 ${unmarkedAirport.municipality}, ${unmarkedAirport.country}`))
                 .addTo(mapInstance);
 
             // Added iata ident to each marker
