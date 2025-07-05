@@ -4,7 +4,7 @@ import MapboxDraw from '@mapbox/mapbox-gl-draw'; // Mapbox GL Draw plugin
 import * as MapboxDrawGeodesic from 'mapbox-gl-draw-geodesic';
 
 import {useAtom, useAtomValue} from "jotai";
-import {airportMarkerAtom, markerDeletionAtom, polylinesAtom} from "@state/atoms.ts";
+import {airportMarkerAtom, markerDeletionAtom, polylinesAtom, routeDeletionAtom} from "@state/atoms.ts";
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
@@ -25,8 +25,10 @@ function MapComponent() {
     const airportMarkers = useAtomValue(airportMarkerAtom);
     const polylines = useAtomValue(polylinesAtom);
     const [iataMarkerToDelete, setIATAMarkerToDelete] = useAtom(markerDeletionAtom);
+    const [deleteRouteID, setDeleteRouteID] = useAtom(routeDeletionAtom);
 
     const trackMarkedLengthRef = useRef<number>(airportMarkers.length);
+    const trackRouteLengthRef = useRef<number>(polylines.length);
 
     /**
      * Tracks browser window width for responsiveness
@@ -48,6 +50,10 @@ function MapComponent() {
         if (drawInstance) {
             drawInstance.deleteAll();
         }
+    }
+
+    const removePolylineByID = (routeID: string) => {
+        drawRef.current?.delete(routeID);
     }
 
     useEffect(() => {
@@ -251,12 +257,20 @@ function MapComponent() {
             });
         }
 
-        if (polylines.length > 0) {
-            addPolylines();
-        } else {
+        if (polylines.length === 0) {
             clearPolylines(drawRef.current);
+        } else {
+            if (polylines.length > trackRouteLengthRef.current) {
+                addPolylines();
+            }
         }
-    }, [polylines])
+        trackRouteLengthRef.current = polylines.length;
+    }, [polylines]);
+
+    useEffect(() => {
+        deleteRouteID !== '' && removePolylineByID(deleteRouteID);
+        setDeleteRouteID('');
+    }, [deleteRouteID]);
 
     return (
         <div className="h-full w-full bg-gray-200 flex items-center justify-center text-black" id='map-container'

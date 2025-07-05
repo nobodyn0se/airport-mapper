@@ -1,15 +1,44 @@
-import {polylinesAtom} from "@state/atoms.ts";
-import {useAtomValue} from "jotai";
+import {airportMarkerAtom, markerDeletionAtom, polylinesAtom, routeDeletionAtom} from "@state/atoms.ts";
+import {useAtom} from "jotai";
 import {calculateTotalDistance} from "@util/util.ts";
 import {MdRemoveCircle} from "react-icons/md";
+import {PolylineRoute} from "@customTypes/global.types.ts";
 
 /**
  * Shows the list of routes below the search bar [SearchPane]
  * @constructor
  */
 function RouteList() {
-    const polylines = useAtomValue(polylinesAtom);
+    const [polylines, setPolylines] = useAtom(polylinesAtom);
     const totalAllRoutes = calculateTotalDistance(polylines.map(polyline => polyline.totalRouteDistance));
+    const [, setDeleteRouteID] = useAtom(routeDeletionAtom);
+    const [, setDisplayMarkers] = useAtom(airportMarkerAtom);
+    const [, setIATAMarkerToDelete] = useAtom(markerDeletionAtom);
+
+    const handleDeleteRoute = (deletionRoute: PolylineRoute) => {
+        // removes from the route list
+        setPolylines(route => route.filter(sector => sector.id !== deletionRoute.id));
+        // triggers map marker removal
+        setDeleteRouteID(deletionRoute.id);
+
+        const iataSet = new Set(deletionRoute.airports);
+        setDisplayMarkers(displayedMarkers => {
+            const updatedMarkers = displayedMarkers.map(marker => {
+                if (iataSet.has(marker.iata)) {
+                    if (typeof marker.usedInRoute === 'number' && marker.usedInRoute > 1) {
+                        return {...marker, usedInRoute: marker.usedInRoute - 1};
+                    } else {
+                        setIATAMarkerToDelete(marker.iata);
+                        return null;
+                    }
+                } else {
+                    return marker;
+                }
+            });
+
+            return updatedMarkers.filter(marker => marker !== null);
+        })
+    }
 
     return (
         <div className="h-5/6">
@@ -47,7 +76,9 @@ function RouteList() {
                                         ))}
                                     </div>
                                     <div
-                                        className="cursor-pointer rounded-full text-lg p-1 text-amber-500 flex items-center hover:bg-gray-200">
+                                        className="cursor-pointer rounded-full text-lg p-1 text-amber-500 flex items-center hover:bg-gray-200"
+                                        onClick={() => handleDeleteRoute(route)}
+                                    >
                                         <MdRemoveCircle/></div>
                                 </aside>
                             </div>
