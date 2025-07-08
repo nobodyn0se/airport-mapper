@@ -3,8 +3,8 @@ import './GCMapper.css';
 import SearchPane from "@components/SearchPane.tsx";
 import RouteList from "@components/RouteList.tsx";
 import React, {useEffect, useState, Suspense, startTransition} from "react";
-import {FaBars} from "react-icons/fa";
 import MapSpinner from "@util/MapSpinner.tsx";
+import {ImSearch} from "react-icons/im";
 
 const LazyMap = React.lazy(() => import("@components/MapComponent.tsx"))
 // using async await to avoid promise chaining mismatch
@@ -45,7 +45,7 @@ function GCMapper() {
                 className="p-2 bg-blue-500 rounded md:hidden absolute top-4 left-4 z-10"
                 onClick={toggleSidebar}
             >
-                <FaBars/>
+                <ImSearch/>
             </button>
             <div
                 className={`${
