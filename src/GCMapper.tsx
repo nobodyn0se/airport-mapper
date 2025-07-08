@@ -49,11 +49,13 @@ function GCMapper() {
             </button>
             <div
                 className={`${
-                    isSidebarOpen ? 'block w-4/5 h-full absolute top-16 left-0 z-20 bg-gray-242424' : 'hidden'
+                    isSidebarOpen ? 'block w-full h-full absolute top-16 left-1/2 -translate-x-1/2 z-20 backdrop-blur-md' : 'hidden'
                 } md:block p-4 min-w-1/4`}
             >
-                <SearchPane/>
-                <RouteList/>
+                <div className={`${isSidebarOpen && 'w-4/5 mx-auto'}`}>
+                    <SearchPane/>
+                    <RouteList/>
+                </div>
             </div>
             <div className="flex-1">
                 {loadMap &&
