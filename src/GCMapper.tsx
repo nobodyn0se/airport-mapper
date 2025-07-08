@@ -49,8 +49,8 @@ function GCMapper() {
             </button>
             <div
                 className={`${
-                    isSidebarOpen ? 'block w-full h-full absolute top-16 left-0 z-20 bg-gray-242424' : 'hidden'
-                } md:block w-1/4 p-4`}
+                    isSidebarOpen ? 'block w-4/5 h-full absolute top-16 left-0 z-20 bg-gray-242424' : 'hidden'
+                } md:block p-4 min-w-1/4`}
             >
                 <SearchPane/>
                 <RouteList/>
