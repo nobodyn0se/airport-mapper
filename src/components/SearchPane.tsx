@@ -123,7 +123,7 @@ function SearchPane() {
 
     return (
         <div className="mb-4 relative">
-            <div className="flex w-full">
+            <div className="flex gap-1 w-full">
                 <div className="relative w-full">
                     <input
                         type="text"
