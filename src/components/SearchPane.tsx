@@ -138,7 +138,9 @@ function SearchPane() {
                         </div>)}
                 </div>
                 <div className="mb-2 flex items-center px-3 rounded-full cursor-pointer hover:bg-gray-200">
-                    <MdDeleteForever title="Delete All Routes" className="text-xl text-red-500"
+                    <MdDeleteForever title="Delete All Routes"
+                                     aria-label="This button deletes all routes so you can start afresh"
+                                     className="text-xl text-red-500"
                                      onClick={handleDeleteAll}/>
                 </div>
             </div>
