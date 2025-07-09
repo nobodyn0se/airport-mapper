@@ -64,7 +64,7 @@ function RouteList() {
                                     ))}
                                 </div>
 
-                                <aside className="flex">
+                                <aside className="flex items-center">
                                     <div className="flex flex-col">
                                         {route.distance.map((distance, i) => (
                                             <span
@@ -76,7 +76,7 @@ function RouteList() {
                                         ))}
                                     </div>
                                     <div
-                                        className="cursor-pointer rounded-full text-lg p-1 text-amber-500 flex items-center hover:bg-gray-200"
+                                        className="cursor-pointer rounded-full text-lg p-1 text-amber-500 hover:bg-gray-200"
                                         onClick={() => handleDeleteRoute(route)}
                                     >
                                         <MdRemoveCircle/></div>
