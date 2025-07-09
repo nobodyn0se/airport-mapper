@@ -26,9 +26,9 @@ function RouteList() {
             const updatedMarkers = displayedMarkers.map(marker => {
                 if (iataSet.has(marker.iata)) {
                     if (typeof marker.usedInRoute === 'number' && marker.usedInRoute > 1) {
+                        iataSet.delete(marker.iata);
                         return {...marker, usedInRoute: marker.usedInRoute - 1};
                     } else {
-                        setIATAMarkerToDelete(marker.iata);
                         return null;
                     }
                 } else {
@@ -36,6 +36,7 @@ function RouteList() {
                 }
             });
 
+            setIATAMarkerToDelete(iataSet);
             return updatedMarkers.filter(marker => marker !== null);
         })
     }

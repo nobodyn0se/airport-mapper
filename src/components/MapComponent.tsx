@@ -137,15 +137,16 @@ function MapComponent() {
     }, [airportMarkers])
 
     useEffect(() => {
-        if (iataMarkerToDelete !== '') {
+        if (iataMarkerToDelete && iataMarkerToDelete.size > 0) {
+
             markerRef.current = markerRef.current.filter(marker => {
-                if (marker.iata === iataMarkerToDelete) {
+                if (marker.iata && iataMarkerToDelete.has(marker.iata)) {
                     marker.remove();
                     return false;
                 }
                 return true;
             });
-            setIATAMarkerToDelete('');
+            setIATAMarkerToDelete(new Set());
         }
     }, [iataMarkerToDelete]);
 
