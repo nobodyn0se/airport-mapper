@@ -45,9 +45,10 @@ function RouteList() {
         <div className="h-5/6">
             <div className="mb-4 p-4 border border-gray-300 rounded">
                 <h4 className="font-semibold">Total Distance: {totalAllRoutes} km</h4>
-                <ul className="list-disc pl-5">
-                    <li>Route breakdown will appear here</li>
-                </ul>
+                {totalAllRoutes === 0 &&
+                    (
+                        <p className="italic font-light">Route breakdown will appear below</p>
+                    )}
             </div>
             {/* Add more route placeholders as needed */}
             <section className="h-5/6 overflow-y-auto divide-y divide-gray-500">
@@ -80,7 +81,8 @@ function RouteList() {
                                         className="cursor-pointer rounded-full text-lg p-1 text-amber-500 hover:bg-gray-200"
                                         onClick={() => handleDeleteRoute(route)}
                                     >
-                                        <MdRemoveCircle/></div>
+                                        <MdRemoveCircle title="Delete this route"
+                                                        aria-label="Clicking this button will delete this route"/></div>
                                 </aside>
                             </div>
                         </li>
