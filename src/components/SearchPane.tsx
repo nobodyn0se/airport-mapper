@@ -26,7 +26,7 @@ function SearchPane() {
     const [searchSuggestions, setSearchSuggestions] = useState<Airport[]>([]);
     const [query, setQuery] = useState('');
 
-    const isDeleteAllDisabled = polylines.length === 0;
+    const isDeleteAllDisabled = polylines.length === 0 && currentAirportMarkers.length === 0;
     const isAddRouteDisabled = currentAirportMarkers.length < 2;
 
     const handleSearch = async (searchQuery: string) => {
