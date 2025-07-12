@@ -20,11 +20,13 @@ import {getAirportSearch} from "../core/api.ts";
 function SearchPane() {
     const [, setAirportMarkers] = useAtom(airportMarkerAtom);
     const [currentAirportMarkers, setCurrentAirportMarkers] = useAtom(currentAirportMarkerAtom);
-    const [, setPolylines] = useAtom(polylinesAtom);
+    const [polylines, setPolylines] = useAtom(polylinesAtom);
     const [lookupState, setLookupState] = useAtom(lookupStateAtom);
 
     const [searchSuggestions, setSearchSuggestions] = useState<Airport[]>([]);
     const [query, setQuery] = useState('');
+
+    const isDeleteAllDisabled = polylines.length === 0;
 
     const handleSearch = async (searchQuery: string) => {
         setLookupState(LookupState.LOADING);
@@ -137,12 +139,16 @@ function SearchPane() {
                             <FaSpinner className="animate-spin text-xl text-gray-500"/>
                         </div>)}
                 </div>
-                <div className="mb-2 flex items-center px-3 rounded-full cursor-pointer hover:bg-gray-200">
-                    <MdDeleteForever title="Delete All Routes"
-                                     aria-label="This button deletes all routes so you can start afresh"
-                                     className="text-xl text-red-500"
-                                     onClick={handleDeleteAll}/>
-                </div>
+                <button
+                    className={`mb-2 flex items-center px-3 rounded-full  ${isDeleteAllDisabled ? 'bg-gray-100 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-200'}`}
+                    title="Delete All Routes"
+                    aria-label="This button deletes all routes so you can start afresh"
+                    disabled={isDeleteAllDisabled}
+                    onClick={handleDeleteAll}>
+                    <MdDeleteForever
+                        className={`text-xl  ${isDeleteAllDisabled ? 'text-gray-400' : 'text-red-500'}`}/>
+
+                </button>
             </div>
             {lookupState === LookupState.HASDATA &&
                 (
