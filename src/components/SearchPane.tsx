@@ -145,6 +145,7 @@ function SearchPane() {
                     title="Delete All Routes"
                     aria-label="This button deletes all routes so you can start afresh"
                     disabled={isDeleteAllDisabled}
+                    aria-disabled={isDeleteAllDisabled}
                     onClick={handleDeleteAll}>
                     <MdDeleteForever
                         className={`text-xl  ${isDeleteAllDisabled ? 'text-gray-400' : 'text-red-500'}`}/>
