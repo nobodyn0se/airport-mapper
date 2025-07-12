@@ -27,6 +27,7 @@ function SearchPane() {
     const [query, setQuery] = useState('');
 
     const isDeleteAllDisabled = polylines.length === 0;
+    const isAddRouteDisabled = currentAirportMarkers.length < 2;
 
     const handleSearch = async (searchQuery: string) => {
         setLookupState(LookupState.LOADING);
@@ -172,8 +173,13 @@ function SearchPane() {
                 border-gray-300 z-10 max-h-48 p-2 font-extralight text-gray-300 text-center">
                 No results found for this airport</span>
             )}
-            <button className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-                    onClick={handlePolylines}>
+            <button
+                className={`w-full bg-blue-500 p-2 rounded  ${isAddRouteDisabled ? 'bg-gray-300 cursor-not-allowed text-gray-500' : 'cursor-pointer hover:bg-blue-600 text-white'}`}
+                title="Add 2 or more airports to create a new route"
+                aria-label="Click this to add 2 or more airports in a new route"
+                aria-disabled={isAddRouteDisabled}
+                disabled={isAddRouteDisabled}
+                onClick={handlePolylines}>
                 Add Route
             </button>
             {currentAirportMarkers.length > 0 && (
